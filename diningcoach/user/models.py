@@ -67,3 +67,17 @@ class UserExtra(models.Model):
 
   def __str__(self):
     return '[User Extra Info] ' + self.user
+
+
+class RefreshToken(models.Model):
+  user = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
+  refresh_token = models.CharField(verbose_name='리프레시 토큰', max_length=255)
+  renewed_at = models.DateTimeField(verbose_name='최종 갱신 일시', auto_now=True)
+  is_deleted = models.BooleanField(verbose_name='삭제 여부', default=False)
+
+  class Meta:
+    verbose_name = '리프레시 토큰'
+    verbose_name_plural = verbose_name
+
+  def __str__(self):
+    return '[Refresh Token] ' + self.user
