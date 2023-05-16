@@ -105,3 +105,14 @@ class CustomizedNutrition(NutritionInfo):
 
   def __str__(self):
     return '[Customized Food Nutrition] ' + self.food.name
+
+
+class ProcessedNutrition(NutritionInfo):
+  food = models.OneToOneField(ProcessedFood, verbose_name='가공식품', on_delete=models.CASCADE, primary_key=True)
+
+  class Meta:
+    verbose_name = '가공식품 영양정보'
+    verbose_name_plural = verbose_name
+
+  def __str__(self):
+    return '[Processed Food Nutrition] ' + self.food.name
