@@ -127,3 +127,14 @@ class FreshNutrition(NutritionInfo):
 
   def __str__(self):
     return '[Fresh Food Nutrition] ' + self.food.name
+
+
+class CookedNutrition(NutritionInfo):
+  food = models.OneToOneField(CookedFood, verbose_name='조리식품', on_delete=models.CASCADE, primary_key=True)
+
+  class Meta:
+    verbose_name = '조리식품 영양정보'
+    verbose_name_plural = verbose_name
+
+  def __str__(self):
+    return '[Cooked Food Nutrition] ' + self.food.name
