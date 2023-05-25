@@ -34,3 +34,16 @@ class Meal(models.Model):
 
   def __str__(self):
     return '[Meal] ' + str(self.diary.date) + ' ' + self.meal_type
+
+
+class MealImage(models.Model):
+  device_id = models.CharField(verbose_name='기기 일련번호', max_length=255, blank=True, null=True)
+  image_url = models.TextField(verbose_name='이미지 주소')
+  meal = models.ForeignKey(Meal, verbose_name='식사', on_delete=models.CASCADE)
+
+  class Meta:
+    verbose_name = '식사 사진'
+    verbose_name_plural = verbose_name
+
+  def __str__(self):
+    return '[Meal Image] ' + self.meal
