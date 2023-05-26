@@ -47,3 +47,24 @@ class MealImage(models.Model):
 
   def __str__(self):
     return '[Meal Image] ' + self.meal
+
+
+class Food(models.Model):
+  FOOD_TYPES = [
+    (1, "Processed Food"),
+    (2, "Fresh Food"),
+    (3, "Cooked Food")
+  ]
+
+  food_type = models.CharField(verbose_name='식품 종류', max_length=45, choices=FOOD_TYPES)
+  food_id = models.BigIntegerField(verbose_name='식품 ID')
+  portion = models.FloatField(verbose_name='비율', blank=True, null=True, default=1)
+  is_deleted = models.BooleanField(verbose_name='삭제 여부', default=False)
+  meal = models.ForeignKey(Meal, verbose_name='식사', on_delete=models.CASCADE)
+
+  class Meta:
+    verbose_name = '음식'
+    verbose_name_plural = verbose_name
+
+  def __str__(self):
+    return '[Food] ' + self.meal + ' ' + self.food_id
