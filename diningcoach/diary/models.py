@@ -68,3 +68,23 @@ class Food(models.Model):
 
   def __str__(self):
     return '[Food] ' + self.meal + ' ' + self.food_id
+
+
+class MealNutrition(models.Model):
+  meal = models.OneToOneField(Meal, verbose_name='식사', on_delete=models.CASCADE, primary_key=True)
+  calorie = models.IntegerField(verbose_name='칼로리(kcal)', blank=True, null=True, default=0)
+  carbohydrate = models.IntegerField(verbose_name='탄수화물(g)', blank=True, null=True, default=0)
+  sugar = models.IntegerField(verbose_name='당류(g)', blank=True, null=True, default=0)
+  protein = models.IntegerField(verbose_name='단백질(g)', blank=True, null=True, default=0)
+  fat = models.IntegerField(verbose_name='지방(g)', blank=True, null=True, default=0)
+  cholesterol = models.IntegerField(verbose_name='콜레스테롤(mg)', blank=True, null=True, default=0)
+  sodium = models.IntegerField(verbose_name='나트륨(mg)', blank=True, null=True, default=0)
+  saturated_fat = models.IntegerField(verbose_name='포화지방(g)', blank=True, null=True, default=0)
+  trans_fat = models.IntegerField(verbose_name='트랜스지방(g)', blank=True, null=True, default=0)
+
+  class Meta:
+    verbose_name = '식사 영양정보'
+    verbose_name_plural = verbose_name
+
+  def __str__(self):
+    return '[Meal Nutrition] ' + self.meal
