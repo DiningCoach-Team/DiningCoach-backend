@@ -2,6 +2,22 @@ from django.db import models
 from user.models import User
 
 
+#################### 추상클래스 ####################
+class FoodModel(models.Model):
+  food_code      = models.CharField(verbose_name='식품코드', max_length=50, unique=True)
+  food_name      = models.CharField(verbose_name='식품명', max_length=255)
+  country_origin = models.CharField(verbose_name='제조국가', max_length=50, blank=True, null=True)
+  manufacturer   = models.CharField(verbose_name='지역/제조사', max_length=50, blank=True, null=True)
+  category_main  = models.CharField(verbose_name='식품대분류', max_length=50)
+  category_sub   = models.CharField(verbose_name='식품상세분류', max_length=50)
+  food_image     = models.TextField(verbose_name='식품 이미지', blank=True, null=True)
+  allergy_info   = models.TextField(verbose_name='알레르기 정보', blank=True, null=True)
+  storage_info   = models.TextField(verbose_name='보관방법 정보', blank=True, null=True)
+
+  class Meta:
+    abstract = True
+
+
 #################### 식품 ####################
 class CustomizedFood(models.Model):
   food_type = models.CharField(verbose_name='식품 종류', max_length=45)
