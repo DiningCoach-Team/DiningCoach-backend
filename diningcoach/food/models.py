@@ -16,6 +16,11 @@ class FoodModel(models.Model):
 
   class Meta:
     abstract = True
+    indexes = [
+      models.Index(fields=['food_code'], name='%(class)s_code_index'),
+      models.Index(fields=['food_name'], name='%(class)s_name_index'),
+      models.Index(fields=['category_main', 'category_sub'], name='%(class)s_category_index'),
+    ]
 
 
 #################### 식품 ####################
