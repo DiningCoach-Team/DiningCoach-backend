@@ -39,6 +39,14 @@ class NutritionModel(models.Model):
     abstract = True
 
 
+class TimestampModel(models.Model):
+  created_at = models.DateTimeField(verbose_name='생성일시', auto_now_add=True)
+  updated_at = models.DateTimeField(verbose_name='수정일시', auto_now=True)
+
+  class Meta:
+    abstract = True
+
+
 #################### 식품 ####################
 class CustomizedFood(models.Model):
   food_type = models.CharField(verbose_name='식품 종류', max_length=45)
