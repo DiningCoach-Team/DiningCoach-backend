@@ -65,6 +65,9 @@ class ProcessedFood(FoodModel):
   class Meta:
     verbose_name = '가공식품'
     verbose_name_plural = verbose_name
+    indexes = [
+      models.Index(fields=['barcode_no'], name='barcode_index'),
+    ]
 
   def __str__(self):
     return '가공식품 : ' + self.food_name
