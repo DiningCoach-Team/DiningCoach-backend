@@ -84,21 +84,15 @@ class FreshFood(FoodModel):
     return '신선식품 : ' + self.food_name
 
 
-class CookedFood(models.Model):
-  food_image = models.TextField(verbose_name='식품 사진', blank=True, null=True)
-  food_category = models.CharField(verbose_name='식품 분류', max_length=255, blank=True, null=True)
-  name = models.CharField(verbose_name='식품명', max_length=255)
-  food_kind = models.CharField(verbose_name='식품유형', max_length=255, blank=True, null=True)
-  allergy_info = models.TextField(verbose_name='알레르기 정보', blank=True, null=True)
-  storage = models.TextField(verbose_name='보관방법', blank=True, null=True)
-  amount_per_serving = models.IntegerField(verbose_name='1회제공량', blank=True, null=True)
+class CookedFood(FoodModel):
+  product_type = models.CharField(verbose_name='상용제품', max_length=50)
 
   class Meta:
     verbose_name = '조리식품'
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[Cooked Food] ' + self.name
+    return '조리식품 : ' + self.food_name
 
 
 #################### 영양성분 ####################
