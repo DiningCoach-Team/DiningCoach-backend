@@ -111,15 +111,15 @@ class NutritionInfo(models.Model):
     abstract = True
 
 
-class CustomizedNutrition(NutritionInfo):
-  food = models.OneToOneField(CustomizedFood, verbose_name='추가식품', on_delete=models.CASCADE, primary_key=True)
+class CustomizedNutrition(NutritionModel):
+  customized_food = models.OneToOneField(CustomizedFood, verbose_name='사용자 추가식품', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
     verbose_name = '사용자 추가식품 영양정보'
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[Customized Food Nutrition] ' + self.food.name
+    return '사용자 추가식품 영양정보 : ' + self.customized_food.food_name
 
 
 class ProcessedNutrition(NutritionInfo):
