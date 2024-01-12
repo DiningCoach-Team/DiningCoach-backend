@@ -122,15 +122,15 @@ class CustomizedNutrition(NutritionModel):
     return '사용자 추가식품 영양정보 : ' + self.customized_food.food_name
 
 
-class ProcessedNutrition(NutritionInfo):
-  food = models.OneToOneField(ProcessedFood, verbose_name='가공식품', on_delete=models.CASCADE, primary_key=True)
+class ProcessedNutrition(NutritionModel):
+  processed_food = models.OneToOneField(ProcessedFood, verbose_name='가공식품', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
     verbose_name = '가공식품 영양정보'
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[Processed Food Nutrition] ' + self.food.name
+    return '가공식품 영양정보 : ' + self.processed_food.food_name
 
 
 class FreshNutrition(NutritionInfo):
