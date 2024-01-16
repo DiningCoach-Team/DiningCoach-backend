@@ -59,6 +59,26 @@ class CustomizedFood(FoodModel):
     return '사용자 추가식품 : ' + self.food_name
 
 
+class CustomizedMetadata(TimestampModel):
+  FOOD_TYPES = [
+    (1, 'Processed Food'),
+    (2, 'Fresh Food'),
+    (3, 'Cooked Food'),
+  ]
+
+  customized_food = models.OneToOneField(CustomizedFood, verbose_name='사용자 추가식품', on_delete=models.CASCADE, primary_key=True)
+  food_type       = models.CharField(verbose_name='식품 종류', max_length=50, choices=FOOD_TYPES)
+  additional_info = models.TextField(verbose_name='추가정보', blank=True, null=True)
+  is_deleted      = models.BooleanField(verbose_name='삭제 여부', default=False)
+
+  class Meta:
+    verbose_name = '사용자 추가식품 메타데이터'
+    verbose_name_plural = verbose_name
+
+  def __str__(self):
+    return '사용자 추가식품 메타데이터 : ' + self.customized_food.food_name
+
+
 class ProcessedFood(FoodModel):
   barcode_no = models.CharField(verbose_name='유통바코드', max_length=50)
 
