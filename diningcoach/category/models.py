@@ -15,6 +15,18 @@ class FoodCategory(models.Model):
     return '식품분류 카테고리 : ' + self.category_name + ' (계층 : ' + str(self.depth) + ')'
 
 
+class HabitCategory(models.Model):
+  category_name = models.CharField(verbose_name='카테고리명', max_length=255)
+  habit_type = models.CharField(verbose_name='식습관 종류', max_length=50)
+
+  class Meta:
+    verbose_name = '식습관 카테고리'
+    verbose_name_plural = verbose_name
+
+  def __str__(self):
+    return '식습관 카테고리 : ' + self.category_name
+
+
 class PreferenceCategory(models.Model):
   category_name = models.CharField(verbose_name='카테고리명', max_length=255)
 
@@ -35,14 +47,3 @@ class AllergyCategory(models.Model):
 
   def __str__(self):
     return '[Allergy Category]' + self.category_name
-
-
-class HabitCategory(models.Model):
-  category_name = models.CharField(verbose_name='카테고리명', max_length=255)
-
-  class Meta:
-    verbose_name = '식습관 카테고리'
-    verbose_name_plural = verbose_name
-
-  def __str__(self):
-    return '[Habit Category] ' + self.category_name
