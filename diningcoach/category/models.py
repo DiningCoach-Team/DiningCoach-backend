@@ -35,7 +35,7 @@ class PreferenceCategory(models.Model):
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[Preference Category] ' + self.category_name
+    return '선호음식 카테고리 : ' + self.category_name
 
 
 class AllergyCategory(models.Model):
