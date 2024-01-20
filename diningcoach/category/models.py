@@ -46,4 +46,4 @@ class AllergyCategory(models.Model):
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[Allergy Category]' + self.category_name
+    return '알레르기 카테고리 : ' + self.category_name
