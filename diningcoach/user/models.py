@@ -11,29 +11,31 @@ class TimestampModel(models.Model):
     abstract = True
 
 
-class User(models.Model):
+#################### 회원 ####################
+class User(TimestampModel):
   PLATFORM_TYPES = [
-    (1, "Kakao"),
-    (2, "Google"),
-    (3, "Apple")
+    (0, 'DiningCoach')
+    (1, 'Kakao'),
+    (2, 'Naver'),
+    (3, 'Google'),
+    (4, 'Apple'),
   ]
 
-  id = models.UUIDField(verbose_name='', primary_key=True, unique=True, editable=False, default=uuid.uuid4)
-  email = models.EmailField(verbose_name='이메일', unique=True)
-  password = models.CharField(verbose_name='비밀번호', max_length=255, blank=True, null=True)
-  platform_type = models.CharField(verbose_name='가입 플랫폼 종류', max_length=45, blank=True, null=True, choices=PLATFORM_TYPES)
-  platform_id = models.CharField(verbose_name='가입 플랫폼 ID', max_length=255, blank=True, null=True)
-  user_agent = models.TextField(verbose_name='가입 환경 정보')
-  created_at = models.DateTimeField(verbose_name='가입 일시', auto_now_add=True)
-  modified_at = models.DateTimeField(verbose_name='수정 일시', auto_now=True)
-  is_deleted = models.BooleanField(verbose_name='삭제 여부', default=False)
+  id            = models.UUIDField(verbose_name='회원 아이디', primary_key=True, unique=True, editable=False, default=uuid.uuid4)
+  email         = models.EmailField(verbose_name='이메일', unique=True)
+  password      = models.CharField(verbose_name='비밀번호', max_length=255, blank=True, null=True)
+  platform_type = models.CharField(verbose_name='가입 플랫폼 종류', max_length=50, blank=True, null=True, choices=PLATFORM_TYPES)
+  platform_id   = models.CharField(verbose_name='가입 플랫폼 ID', max_length=255, blank=True, null=True)
+  user_agent    = models.TextField(verbose_name='가입 환경 정보')
+  is_inactive   = models.BooleanField(verbose_name='휴면회원 여부', default=False)
+  is_deleted    = models.BooleanField(verbose_name='삭제 여부', default=False)
 
   class Meta:
     verbose_name = '회원'
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[User] ' + self.email
+    return '회원 : ' + self.email
 
 
 class UserBasic(models.Model):
