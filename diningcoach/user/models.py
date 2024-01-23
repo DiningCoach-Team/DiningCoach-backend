@@ -40,26 +40,26 @@ class User(TimestampModel):
 
 class UserBasic(models.Model):
   GENDER_TYPES = [
-    (1, "Male"),
-    (2, "Female")
+    (1, 'Male'),
+    (2, 'Female'),
   ]
 
-  user = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
-  nickname = models.CharField(verbose_name='닉네임', max_length=255, blank=True, null=True)
-  consent_terms = models.BooleanField(verbose_name='필수약관 동의 여부', default=False)
+  user              = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
+  nickname          = models.CharField(verbose_name='닉네임', max_length=255, blank=True, null=True)
+  consent_terms     = models.BooleanField(verbose_name='필수약관 동의 여부', default=False)
   receive_marketing = models.BooleanField(verbose_name='마케팅정보 수신 여부', default=False)
-  gender = models.CharField(verbose_name='성별', max_length=45, blank=True, null=True, choices=GENDER_TYPES)
-  birthdate = models.DateField(verbose_name='생년월일', blank=True, null=True)
-  phone_num = models.CharField(verbose_name='전화번호', max_length=45, blank=True, null=True)
-  intro = models.TextField(verbose_name='자기소개', blank=True, null=True)
-  profile_image = models.TextField(verbose_name='프로필 사진', blank=True, null=True)
+  gender            = models.CharField(verbose_name='성별', max_length=50, blank=True, null=True, choices=GENDER_TYPES)
+  birthdate         = models.DateField(verbose_name='생년월일', blank=True, null=True)
+  phone_num         = models.CharField(verbose_name='전화번호', max_length=50, blank=True, null=True)
+  intro             = models.TextField(verbose_name='자기소개', blank=True, null=True)
+  profile_image     = models.TextField(verbose_name='프로필 사진', blank=True, null=True)
 
   class Meta:
     verbose_name = '회원 기본정보'
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[User Basic Info] ' + self.user
+    return '회원 기본정보 : ' + self.user.email
 
 
 class UserExtra(models.Model):
