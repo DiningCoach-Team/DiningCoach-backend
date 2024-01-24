@@ -63,13 +63,13 @@ class UserBasic(models.Model):
 
 
 class UserExtra(models.Model):
-  user = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
-  height = models.IntegerField(verbose_name='키', blank=True, null=True)
-  weight = models.IntegerField(verbose_name='몸무게', blank=True, null=True)
-  workout_time = models.IntegerField(verbose_name='평균 운동량', blank=True, null=True)
-  sleep_time = models.IntegerField(verbose_name='평균 수면시간', blank=True, null=True)
-  allergy_info = models.TextField(verbose_name='알레르기 정보', blank=True, null=True)
-  habit_info = models.TextField(verbose_name='특이 식습관 정보', blank=True, null=True)
+  user            = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
+  height          = models.IntegerField(verbose_name='키', blank=True, null=True)
+  weight          = models.IntegerField(verbose_name='몸무게', blank=True, null=True)
+  workout_time    = models.IntegerField(verbose_name='평균 운동량', blank=True, null=True)
+  sleep_time      = models.IntegerField(verbose_name='평균 수면시간', blank=True, null=True)
+  allergy_info    = models.TextField(verbose_name='알레르기 정보', blank=True, null=True)
+  habit_info      = models.TextField(verbose_name='특이 식습관 정보', blank=True, null=True)
   preference_info = models.TextField(verbose_name='선호 음식 정보', blank=True, null=True)
 
   class Meta:
@@ -77,7 +77,7 @@ class UserExtra(models.Model):
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[User Extra Info] ' + self.user
+    return '회원 추가정보 : ' + self.user.email
 
 
 class RefreshToken(models.Model):
