@@ -2,6 +2,15 @@ from django.db import models
 from user.models import User
 
 
+#################### 추상클래스 ####################
+class TimestampModel(models.Model):
+  created_at = models.DateTimeField(verbose_name='생성일시', auto_now_add=True)
+  updated_at = models.DateTimeField(verbose_name='수정일시', auto_now=True)
+
+  class Meta:
+    abstract = True
+
+
 class Diary(models.Model):
   date = models.DateField(verbose_name='날짜')
   is_deleted = models.BooleanField(verbose_name='삭제 여부', default=False)
