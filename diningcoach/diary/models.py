@@ -11,6 +11,22 @@ class TimestampModel(models.Model):
     abstract = True
 
 
+class NutritionModel(models.Model):
+  amount_per_serving = models.FloatField(verbose_name='1회제공량(g)', blank=True, null=True, default=0.0)
+  calorie            = models.FloatField(verbose_name='칼로리(kcal)', blank=True, null=True, default=0.0)
+  carbohydrate       = models.FloatField(verbose_name='탄수화물(g)', blank=True, null=True, default=0.0)
+  sugar              = models.FloatField(verbose_name='당류(g)', blank=True, null=True, default=0.0)
+  protein            = models.FloatField(verbose_name='단백질(g)', blank=True, null=True, default=0.0)
+  fat                = models.FloatField(verbose_name='지방(g)', blank=True, null=True, default=0.0)
+  cholesterol        = models.FloatField(verbose_name='콜레스테롤(mg)', blank=True, null=True, default=0.0)
+  sodium             = models.FloatField(verbose_name='나트륨(mg)', blank=True, null=True, default=0.0)
+  saturated_fat      = models.FloatField(verbose_name='포화지방(g)', blank=True, null=True, default=0.0)
+  trans_fat          = models.FloatField(verbose_name='트랜스지방(g)', blank=True, null=True, default=0.0)
+
+  class Meta:
+    abstract = True
+
+
 class Diary(models.Model):
   date = models.DateField(verbose_name='날짜')
   is_deleted = models.BooleanField(verbose_name='삭제 여부', default=False)
