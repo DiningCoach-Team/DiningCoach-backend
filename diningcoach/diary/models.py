@@ -64,17 +64,18 @@ class Meal(TimestampModel):
     return '식사 : ' + str(self.date) + ' ' + self.meal_type
 
 
-class MealImage(models.Model):
-  device_id = models.CharField(verbose_name='기기 일련번호', max_length=255, blank=True, null=True)
-  image_url = models.TextField(verbose_name='이미지 주소')
-  meal = models.ForeignKey(Meal, verbose_name='식사', on_delete=models.CASCADE)
+class MealImage(TimestampModel):
+  image_url   = models.TextField(verbose_name='이미지 주소')
+  device_info = models.TextField(verbose_name='기기 정보', blank=True, null=True)
+  is_deleted  = models.BooleanField(verbose_name='삭제 여부', default=False)
+  meal        = models.ForeignKey(Meal, verbose_name='식사', on_delete=models.CASCADE)
 
   class Meta:
     verbose_name = '식사 사진'
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[Meal Image] ' + self.meal
+    return '식사 사진 : ' + str(self.meal.date) + ' ' + self.meal.meal_type
 
 
 class Food(models.Model):
