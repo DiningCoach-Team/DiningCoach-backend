@@ -78,7 +78,7 @@ class MealImage(TimestampModel):
     return '식사 사진 : ' + str(self.meal.date) + ' ' + self.meal.meal_type
 
 
-class Food(models.Model):
+class MealFood(models.Model):
   FOOD_TYPES = [
     (1, "Processed Food"),
     (2, "Fresh Food"),
@@ -92,11 +92,11 @@ class Food(models.Model):
   meal = models.ForeignKey(Meal, verbose_name='식사', on_delete=models.CASCADE)
 
   class Meta:
-    verbose_name = '음식'
+    verbose_name = '식사 음식'
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '[Food] ' + self.meal + ' ' + self.food_id
+    return '[Meal Food] ' + self.meal + ' ' + self.food_id
 
 
 class MealNutrition(models.Model):
