@@ -40,6 +40,7 @@ class MealDiary(TimestampModel):
   meal_type    = models.CharField(verbose_name='식사 종류', max_length=50, choices=MEAL_TYPES)
   content      = models.TextField(verbose_name='내용', blank=True, null=True)
   is_favourite = models.BooleanField(verbose_name='즐겨찾기', default=False)
+  is_public    = models.BooleanField(verbose_name='공개 여부', default=False)
   is_deleted   = models.BooleanField(verbose_name='삭제 여부', default=False)
   user         = models.ForeignKey(User, verbose_name='회원', on_delete=models.CASCADE)
 
