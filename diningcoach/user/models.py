@@ -14,7 +14,7 @@ class TimestampModel(models.Model):
 #################### 회원 ####################
 class User(TimestampModel):
   PLATFORM_TYPES = [
-    (0, 'DiningCoach')
+    (0, 'DiningCoach'),
     (1, 'Kakao'),
     (2, 'Naver'),
     (3, 'Google'),
