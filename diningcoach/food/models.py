@@ -2,7 +2,7 @@ from django.db import models
 from user.models import User
 
 
-#################### 추상클래스 ####################
+##### 추상클래스 #####
 class FoodModel(models.Model):
   food_code      = models.CharField(verbose_name='식품코드', max_length=50, unique=True)
   food_name      = models.CharField(verbose_name='식품명', max_length=255)
@@ -47,11 +47,12 @@ class TimestampModel(models.Model):
     abstract = True
 
 
-#################### 식품 ####################
+##### 식품 #####
 class CustomizedFood(FoodModel):
   user = models.ForeignKey(User, verbose_name='회원', on_delete=models.CASCADE)
 
   class Meta:
+    db_table = 'customized_food'
     verbose_name = '사용자 추가식품'
     verbose_name_plural = verbose_name
 
@@ -72,6 +73,7 @@ class CustomizedMetadata(TimestampModel):
   is_deleted      = models.BooleanField(verbose_name='삭제 여부', default=False)
 
   class Meta:
+    db_table = 'customized_metadata'
     verbose_name = '사용자 추가식품 메타데이터'
     verbose_name_plural = verbose_name
 
@@ -83,6 +85,7 @@ class ProcessedFood(FoodModel):
   barcode_no = models.CharField(verbose_name='유통바코드', max_length=50)
 
   class Meta:
+    db_table = 'processed_food'
     verbose_name = '가공식품'
     verbose_name_plural = verbose_name
     indexes = [
@@ -97,6 +100,7 @@ class FreshFood(FoodModel):
   harvest_time = models.CharField(verbose_name='채취시기', max_length=50)
 
   class Meta:
+    db_table = 'fresh_food'
     verbose_name = '신선식품'
     verbose_name_plural = verbose_name
 
@@ -108,6 +112,7 @@ class CookedFood(FoodModel):
   product_type = models.CharField(verbose_name='상용제품', max_length=50)
 
   class Meta:
+    db_table = 'cooked_food'
     verbose_name = '조리식품'
     verbose_name_plural = verbose_name
 
@@ -115,11 +120,12 @@ class CookedFood(FoodModel):
     return '조리식품 : ' + self.food_name
 
 
-#################### 영양성분 ####################
+##### 영양성분 #####
 class CustomizedNutrition(NutritionModel):
   customized_food = models.OneToOneField(CustomizedFood, verbose_name='사용자 추가식품', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
+    db_table = 'customized_nutrition'
     verbose_name = '사용자 추가식품 영양정보'
     verbose_name_plural = verbose_name
 
@@ -131,6 +137,7 @@ class ProcessedNutrition(NutritionModel):
   processed_food = models.OneToOneField(ProcessedFood, verbose_name='가공식품', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
+    db_table = 'processed_nutrition'
     verbose_name = '가공식품 영양정보'
     verbose_name_plural = verbose_name
 
@@ -142,6 +149,7 @@ class FreshNutrition(NutritionModel):
   fresh_food = models.OneToOneField(FreshFood, verbose_name='신선식품', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
+    db_table = 'fresh_nutrition'
     verbose_name = '신선식품 영양정보'
     verbose_name_plural = verbose_name
 
@@ -153,6 +161,7 @@ class CookedNutrition(NutritionModel):
   cooked_food = models.OneToOneField(CookedFood, verbose_name='조리식품', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
+    db_table = 'cooked_nutrition'
     verbose_name = '조리식품 영양정보'
     verbose_name_plural = verbose_name
 
