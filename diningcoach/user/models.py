@@ -2,7 +2,7 @@ from django.db import models
 import uuid
 
 
-#################### 추상클래스 ####################
+##### 추상클래스 #####
 class TimestampModel(models.Model):
   created_at = models.DateTimeField(verbose_name='생성일시', auto_now_add=True)
   updated_at = models.DateTimeField(verbose_name='수정일시', auto_now=True)
@@ -11,7 +11,7 @@ class TimestampModel(models.Model):
     abstract = True
 
 
-#################### 회원 ####################
+##### 회원 #####
 class User(TimestampModel):
   PLATFORM_TYPES = [
     (0, 'DiningCoach'),
@@ -31,6 +31,7 @@ class User(TimestampModel):
   is_deleted    = models.BooleanField(verbose_name='삭제 여부', default=False)
 
   class Meta:
+    db_table = 'user'
     verbose_name = '회원'
     verbose_name_plural = verbose_name
 
@@ -55,6 +56,7 @@ class UserBasic(models.Model):
   profile_image     = models.TextField(verbose_name='프로필 사진', blank=True, null=True)
 
   class Meta:
+    db_table = 'user_basic'
     verbose_name = '회원 기본정보'
     verbose_name_plural = verbose_name
 
@@ -73,6 +75,7 @@ class UserExtra(models.Model):
   preference_info = models.TextField(verbose_name='선호 음식 정보', blank=True, null=True)
 
   class Meta:
+    db_table = 'user_extra'
     verbose_name = '회원 추가정보'
     verbose_name_plural = verbose_name
 
@@ -86,6 +89,7 @@ class RefreshToken(TimestampModel):
   is_deleted    = models.BooleanField(verbose_name='삭제 여부', default=False)
 
   class Meta:
+    db_table = 'refresh_token'
     verbose_name = '리프레시 토큰'
     verbose_name_plural = verbose_name
 
