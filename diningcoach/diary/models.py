@@ -2,7 +2,7 @@ from django.db import models
 from user.models import User
 
 
-#################### 추상클래스 ####################
+##### 추상클래스 #####
 class TimestampModel(models.Model):
   created_at = models.DateTimeField(verbose_name='생성일시', auto_now_add=True)
   updated_at = models.DateTimeField(verbose_name='수정일시', auto_now=True)
@@ -27,7 +27,7 @@ class NutritionModel(models.Model):
     abstract = True
 
 
-#################### 식단일기 ####################
+##### 식단일기 #####
 class MealDiary(TimestampModel):
   MEAL_TYPES = [
     (1, 'Breakfast'),
@@ -45,6 +45,7 @@ class MealDiary(TimestampModel):
   user         = models.ForeignKey(User, verbose_name='회원', on_delete=models.CASCADE)
 
   class Meta:
+    db_table = 'meal_diary'
     verbose_name = '식사일기'
     verbose_name_plural = verbose_name
 
@@ -59,6 +60,7 @@ class MealImage(TimestampModel):
   meal        = models.ForeignKey(MealDiary, verbose_name='식사일기', on_delete=models.CASCADE)
 
   class Meta:
+    db_table = 'meal_image'
     verbose_name = '식사 사진'
     verbose_name_plural = verbose_name
 
@@ -80,6 +82,7 @@ class MealFood(models.Model):
   meal      = models.ForeignKey(MealDiary, verbose_name='식사일기', on_delete=models.CASCADE)
 
   class Meta:
+    db_table = 'meal_food'
     verbose_name = '식사 음식'
     verbose_name_plural = verbose_name
 
@@ -91,6 +94,7 @@ class MealNutrition(NutritionModel):
   meal = models.OneToOneField(MealDiary, verbose_name='식사일기', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
+    db_table = 'meal_nutrition'
     verbose_name = '식사 영양정보'
     verbose_name_plural = verbose_name
 
