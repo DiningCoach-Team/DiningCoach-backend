@@ -16,11 +16,6 @@ class FoodModel(models.Model):
 
   class Meta:
     abstract = True
-    indexes = [
-      models.Index(fields=['food_code'], name='%(class)s_code_index'),
-      models.Index(fields=['food_name'], name='%(class)s_name_index'),
-      models.Index(fields=['category_main', 'category_sub'], name='%(class)s_category_index'),
-    ]
 
 
 class NutritionModel(models.Model):
@@ -55,6 +50,11 @@ class CustomizedFood(FoodModel):
     db_table = 'customized_food'
     verbose_name = '사용자 추가식품'
     verbose_name_plural = verbose_name
+    indexes = [
+      models.Index(fields=['food_code'], name='customized_food_code_index'),
+      models.Index(fields=['food_name'], name='customized_food_name_index'),
+      models.Index(fields=['category_main', 'category_sub'], name='customized_food_category_index'),
+    ]
 
   def __str__(self):
     return '사용자 추가식품 : ' + self.food_name
@@ -89,7 +89,10 @@ class ProcessedFood(FoodModel):
     verbose_name = '가공식품'
     verbose_name_plural = verbose_name
     indexes = [
-      models.Index(fields=['barcode_no'], name='barcode_index'),
+      models.Index(fields=['food_code'], name='processed_food_code_index'),
+      models.Index(fields=['food_name'], name='processed_food_name_index'),
+      models.Index(fields=['category_main', 'category_sub'], name='processed_food_category_index'),
+      models.Index(fields=['barcode_no'], name='processed_food_barcode_index'),
     ]
 
   def __str__(self):
@@ -103,6 +106,11 @@ class FreshFood(FoodModel):
     db_table = 'fresh_food'
     verbose_name = '신선식품'
     verbose_name_plural = verbose_name
+    indexes = [
+      models.Index(fields=['food_code'], name='fresh_food_code_index'),
+      models.Index(fields=['food_name'], name='fresh_food_name_index'),
+      models.Index(fields=['category_main', 'category_sub'], name='fresh_food_category_index'),
+    ]
 
   def __str__(self):
     return '신선식품 : ' + self.food_name
@@ -115,6 +123,11 @@ class CookedFood(FoodModel):
     db_table = 'cooked_food'
     verbose_name = '조리식품'
     verbose_name_plural = verbose_name
+    indexes = [
+      models.Index(fields=['food_code'], name='cooked_food_code_index'),
+      models.Index(fields=['food_name'], name='cooked_food_name_index'),
+      models.Index(fields=['category_main', 'category_sub'], name='cooked_food_category_index'),
+    ]
 
   def __str__(self):
     return '조리식품 : ' + self.food_name
