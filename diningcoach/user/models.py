@@ -22,6 +22,7 @@ class User(TimestampModel):
   ]
 
   id            = models.UUIDField(verbose_name='회원 아이디', primary_key=True, unique=True, editable=False, default=uuid.uuid4)
+  nickname      = models.CharField(verbose_name='닉네임', max_length=255, unique=True)
   email         = models.EmailField(verbose_name='이메일', unique=True)
   password      = models.CharField(verbose_name='비밀번호', max_length=255, blank=True, null=True)
   platform_type = models.CharField(verbose_name='가입 플랫폼 종류', max_length=50, blank=True, null=True, choices=PLATFORM_TYPES)
@@ -46,7 +47,6 @@ class UserBasic(models.Model):
   ]
 
   user              = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
-  nickname          = models.CharField(verbose_name='닉네임', max_length=255, blank=True, null=True)
   consent_terms     = models.BooleanField(verbose_name='필수약관 동의 여부', default=False)
   receive_marketing = models.BooleanField(verbose_name='마케팅정보 수신 여부', default=False)
   gender            = models.CharField(verbose_name='성별', max_length=50, blank=True, null=True, choices=GENDER_TYPES)
