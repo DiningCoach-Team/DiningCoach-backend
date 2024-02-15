@@ -35,6 +35,11 @@ class User(TimestampModel):
     db_table = 'user'
     verbose_name = '회원'
     verbose_name_plural = verbose_name
+    indexes = [
+      models.Index(fields=['id'], name='user_id_index'),
+      models.Index(fields=['nickname'], name='user_nickname_index'),
+      models.Index(fields=['email'], name='user_email_index'),
+    ]
 
   def __str__(self):
     return '회원 : ' + self.email
