@@ -22,9 +22,9 @@ class User(TimestampModel):
   ]
 
   id            = models.UUIDField(verbose_name='회원 아이디', primary_key=True, unique=True, editable=False, default=uuid.uuid4)
-  nickname      = models.CharField(verbose_name='닉네임', max_length=255, default='회원')
   email         = models.EmailField(verbose_name='이메일', unique=True)
   password      = models.CharField(verbose_name='비밀번호', max_length=255, blank=True, null=True)
+  nickname      = models.CharField(verbose_name='닉네임', max_length=255, default='회원')
   platform_type = models.CharField(verbose_name='가입 플랫폼 종류', max_length=50, blank=True, null=True, choices=PLATFORM_TYPES)
   platform_id   = models.CharField(verbose_name='가입 플랫폼 ID', max_length=255, blank=True, null=True)
   user_agent    = models.TextField(verbose_name='가입 환경 정보')
