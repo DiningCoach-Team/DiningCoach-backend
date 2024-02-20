@@ -7,7 +7,7 @@ class FoodModel(models.Model):
   food_code      = models.CharField(verbose_name='식품코드', max_length=50, unique=True)
   food_name      = models.CharField(verbose_name='식품명', max_length=255)
   country_origin = models.CharField(verbose_name='제조국가', max_length=50, blank=True, null=True)
-  manufacturer   = models.CharField(verbose_name='지역/제조사', max_length=50, blank=True, null=True)
+  manufacturer   = models.CharField(verbose_name='지역/제조사', max_length=255, blank=True, null=True)
   category_main  = models.CharField(verbose_name='식품대분류', max_length=50)
   category_sub   = models.CharField(verbose_name='식품상세분류', max_length=50)
   food_image     = models.TextField(verbose_name='식품 이미지', blank=True, null=True)
