@@ -147,7 +147,7 @@ class CustomizedNutrition(NutritionModel):
 
 
 class ProcessedNutrition(NutritionModel):
-  processed_food = models.OneToOneField(ProcessedFood, verbose_name='가공식품', on_delete=models.CASCADE, primary_key=True)
+  processed_food = models.OneToOneField(ProcessedFood, verbose_name='가공식품', related_name='nutrition_info', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
     db_table = 'processed_nutrition'
