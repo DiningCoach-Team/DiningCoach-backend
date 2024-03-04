@@ -135,7 +135,7 @@ class CookedFood(FoodModel):
 
 ##### 영양성분 #####
 class CustomizedNutrition(NutritionModel):
-  customized_food = models.OneToOneField(CustomizedFood, verbose_name='사용자 추가식품', on_delete=models.CASCADE, primary_key=True)
+  customized_food = models.OneToOneField(CustomizedFood, verbose_name='사용자 추가식품', related_name='nutrition_info', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
     db_table = 'customized_nutrition'
@@ -159,7 +159,7 @@ class ProcessedNutrition(NutritionModel):
 
 
 class FreshNutrition(NutritionModel):
-  fresh_food = models.OneToOneField(FreshFood, verbose_name='신선식품', on_delete=models.CASCADE, primary_key=True)
+  fresh_food = models.OneToOneField(FreshFood, verbose_name='신선식품', related_name='nutrition_info', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
     db_table = 'fresh_nutrition'
@@ -171,7 +171,7 @@ class FreshNutrition(NutritionModel):
 
 
 class CookedNutrition(NutritionModel):
-  cooked_food = models.OneToOneField(CookedFood, verbose_name='조리식품', on_delete=models.CASCADE, primary_key=True)
+  cooked_food = models.OneToOneField(CookedFood, verbose_name='조리식품', related_name='nutrition_info', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
     db_table = 'cooked_nutrition'
