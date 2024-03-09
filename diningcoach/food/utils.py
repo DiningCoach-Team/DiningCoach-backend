@@ -12,6 +12,6 @@ def custom_exception_handler(exc, context):
     error_res['error_code'] = response.status_code
     error_res['error_time'] = datetime.now()
 
-  return Response(error_res, status=error_res['error_code'])
+    return Response(error_res, status=error_res['error_code'])
 
-  # return response
+  return response
