@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 
 from food.models import ProcessedFood
 from food.serializers import FoodScanSerializer
+from food.exceptions import InvalidInputFormatException
 
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -17,7 +18,7 @@ class FoodScanView(ListAPIView):
 
   def validate(self, barcode_no):
     if not barcode_no.isnumeric():
-      raise ValidationError(message='스캔하신 바코드의 입력 형식이 올바르지 않습니다.', code=status.HTTP_400_BAD_REQUEST)
+      raise InvalidInputFormatException(detail='스캔하신 바코드의 입력 형식이 올바르지 않습니다.', code=status.HTTP_400_BAD_REQUEST)
 
   def get_queryset(self):
     barcode_no = self.kwargs['barcode_no']
