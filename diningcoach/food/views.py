@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 
 from food.models import ProcessedFood
 from food.serializers import FoodScanSerializer
-from food.exceptions import InvalidInputFormatException
+from food.exceptions import InvalidInputFormatException, NoResultFoundException
 
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -30,7 +30,7 @@ class FoodScanView(ListAPIView):
     queryset = self.filter_queryset(self.get_queryset())
 
     if not queryset.exists():
-      return Response({'code': 204, 'message': '스캔하신 바코드에 해당하는 상품이 존재하지 않습니다.'}, status=status.HTTP_204_NO_CONTENT)
+      raise NoResultFoundException(detail='스캔하신 바코드에 해당하는 상품이 존재하지 않습니다.', code=status.HTTP_204_NO_CONTENT)
 
     serializer = self.get_serializer(queryset, many=True)
     return Response(serializer.data)
