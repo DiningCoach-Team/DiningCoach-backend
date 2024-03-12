@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_filters',
     'rest_framework',
 
     'user',
@@ -142,5 +143,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Django REST framework
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'food.utils.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'food.utils.custom_exception_handler',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
