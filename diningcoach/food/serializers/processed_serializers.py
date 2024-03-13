@@ -6,6 +6,12 @@ from rest_framework import serializers
 from rest_framework import status
 
 
+class ProcessedFoodSimpleSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = ProcessedFood
+    fields = ['id', 'food_name', 'category_main', 'category_sub', 'food_image', 'barcode_no']
+
+
 class ProcessedFoodSerializer(serializers.ModelSerializer):
   class Meta:
     model = ProcessedFood
@@ -24,11 +30,3 @@ class ProcessedNutritionSerializer(serializers.ModelSerializer):
   class Meta:
     model = ProcessedNutrition
     exclude = ['processed_food']
-
-
-class FoodScanSerializer(serializers.ModelSerializer):
-  nutrition_info = ProcessedNutritionSerializer(many=False, read_only=True)
-
-  class Meta:
-    model = ProcessedFood
-    fields = '__all__'

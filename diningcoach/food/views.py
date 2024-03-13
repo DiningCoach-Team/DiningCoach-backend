@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.core.exceptions import ValidationError
 
 from food.models import ProcessedFood
-from food.serializers import FoodScanSerializer
+from food.serializers.serializers import ProcessedFoodDetailSerializer
 from food.exceptions import InvalidInputFormatException, NoResultFoundException
 
 from rest_framework.views import APIView
@@ -14,7 +14,7 @@ from rest_framework import status
 
 # api/food/scan/<str:barcode_no>
 class FoodScanView(ListAPIView):
-  serializer_class = FoodScanSerializer
+  serializer_class = ProcessedFoodDetailSerializer
 
   def validate(self, barcode_no):
     if not barcode_no.isnumeric():
