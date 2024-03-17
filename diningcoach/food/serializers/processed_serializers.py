@@ -6,13 +6,13 @@ from rest_framework import serializers
 from rest_framework import status
 
 
-class ProcessedFoodSimpleSerializer(serializers.ModelSerializer):
+class ProcessedNutritionSerializer(serializers.ModelSerializer):
   class Meta:
-    model = ProcessedFood
-    fields = ['id', 'food_name', 'category_main', 'category_sub', 'food_image', 'barcode_no']
+    model = ProcessedNutrition
+    exclude = ['processed_food']
 
 
-class ProcessedFoodSerializer(serializers.ModelSerializer):
+class ProcessedFoodDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = ProcessedFood
     fields = '__all__'
@@ -26,7 +26,15 @@ class ProcessedFoodSerializer(serializers.ModelSerializer):
   #   return super().validate(attrs)
 
 
-class ProcessedNutritionSerializer(serializers.ModelSerializer):
+class ProcessedFoodSimpleSerializer(serializers.ModelSerializer):
   class Meta:
-    model = ProcessedNutrition
-    exclude = ['processed_food']
+    model = ProcessedFood
+    fields = ['id', 'food_name', 'category_main', 'category_sub', 'food_image', 'barcode_no']
+
+
+class ProcessedFoodDetailSerializer(serializers.ModelSerializer):
+  nutrition_info = ProcessedNutritionSerializer(many=False, read_only=True)
+
+  class Meta:
+    model = ProcessedFood
+    fields = '__all__'
