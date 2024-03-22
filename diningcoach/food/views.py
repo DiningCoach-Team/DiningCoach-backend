@@ -5,12 +5,12 @@ from django.core.exceptions import ValidationError
 from food.models import ProcessedFood
 from food.serializers.processed_serializers import ProcessedFoodSimpleSerializer, ProcessedFoodDetailSerializer
 from food.exceptions import InvalidInputFormatException, NoResultFoundException
+from food.filters import ProcessedFoodFilter
 
-from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from django_filters.rest_framework import DjangoFilterBackend, FilterSet, NumberFilter, CharFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 # api/food/scan/<str:barcode_no>
@@ -46,20 +46,6 @@ class FoodScanView(ListAPIView):
   #   scan_result = self.get_object(barcode_no)
   #   serializer = ProcessedFoodSerializer(scan_result, many=True)
   #   return Response(serializer.data)
-
-
-class FoodFilter(FilterSet):
-  no = NumberFilter(field_name='id', lookup_expr='exact')
-  code = CharFilter(field_name='food_code', lookup_expr='contains')
-  name = CharFilter(field_name='food_name', lookup_expr='contains')
-  cate_main = CharFilter(field_name='category_main', lookup_expr='iexact')
-  cate_sub = CharFilter(field_name='category_sub', lookup_expr='iexact')
-
-
-class ProcessedFoodFilter(FoodFilter):
-  class Meta:
-    model = ProcessedFood
-    fields = ['no', 'code', 'name', 'cate_main', 'cate_sub']
 
 
 # api/food/search/processed?no=?&code=?&name=?&cate_main=?&cate_sub=?
