@@ -48,12 +48,9 @@ class FoodScanView(ListAPIView):
   #   return Response(serializer.data)
 
 
-# api/food/search/processed?no=?&code=?&name=?&cate_main=?&cate_sub=?
-class ProcessedFoodSearchView(ListAPIView):
-  queryset = ProcessedFood.objects.all()
-  serializer_class = ProcessedFoodSimpleSerializer
+# 'Food Search' base class
+class FoodSearchView(ListAPIView):
   filter_backends = [DjangoFilterBackend]
-  filterset_class = ProcessedFoodFilter
 
   def validate_input(self):
     correct_query_params = ['no', 'code', 'name', 'cate_main', 'cate_sub']
@@ -67,7 +64,14 @@ class ProcessedFoodSearchView(ListAPIView):
     queryset = self.filter_queryset(self.get_queryset())
 
     if not queryset.exists():
-      raise NoResultFoundException(detail='검색하신 조건에 해당하는 가공식품이 존재하지 않습니다.', code=status.HTTP_204_NO_CONTENT)
+      raise NoResultFoundException(detail='검색하신 조건에 해당하는 식품이 존재하지 않습니다.', code=status.HTTP_204_NO_CONTENT)
 
     serializer = self.get_serializer(queryset, many=True)
     return Response(serializer.data)
+
+
+# api/food/search/processed?no=?&code=?&name=?&cate_main=?&cate_sub=?
+class ProcessedFoodSearchView(FoodSearchView):
+  queryset = ProcessedFood.objects.all()
+  serializer_class = ProcessedFoodSimpleSerializer
+  filterset_class = ProcessedFoodFilter
