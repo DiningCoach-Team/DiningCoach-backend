@@ -2,10 +2,11 @@ from django.http import Http404
 from django.shortcuts import render
 from django.core.exceptions import ValidationError
 
-from food.models import ProcessedFood
+from food.models import ProcessedFood, FreshFood
 from food.serializers.processed_serializers import ProcessedFoodSimpleSerializer, ProcessedFoodDetailSerializer
+from food.serializers.fresh_serializers import FreshFoodSimpleSerializer
 from food.exceptions import InvalidInputFormatException, NoResultFoundException
-from food.filters import ProcessedFoodFilter
+from food.filters import ProcessedFoodFilter, FreshFoodFilter
 
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
@@ -75,3 +76,10 @@ class ProcessedFoodSearchView(FoodSearchView):
   queryset = ProcessedFood.objects.all()
   serializer_class = ProcessedFoodSimpleSerializer
   filterset_class = ProcessedFoodFilter
+
+
+# api/food/search/fresh?no=?&code=?&name=?&cate_main=?&cate_sub=?
+class FreshFoodSearchView(FoodSearchView):
+  queryset = FreshFood.objects.all()
+  serializer_class = FreshFoodSimpleSerializer
+  filterset_class = FreshFoodFilter
