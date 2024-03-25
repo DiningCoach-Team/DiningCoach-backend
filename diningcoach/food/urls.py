@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from food.views import (
-  FoodScanView, ProcessedFoodSearchView, FreshFoodSearchView
+  FoodScanView, ProcessedFoodSearchView, FreshFoodSearchView, CookedFoodSearchView
 )
 
 urlpatterns = [
@@ -10,7 +10,7 @@ urlpatterns = [
   # query parameter : no, code, name, cate_main, cate_sub
   path('search/processed', ProcessedFoodSearchView.as_view()),
   path('search/fresh', FreshFoodSearchView.as_view()),
-  # path('search/cooked', CookedFoodSearchView.as_view()),
+  path('search/cooked', CookedFoodSearchView.as_view()),
 
   # path('detail/processed', ProcessedFoodDetailView.as_view()),
   # path('detail/fresh', FreshFoodDetailView.as_view()),

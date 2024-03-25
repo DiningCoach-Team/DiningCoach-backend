@@ -1,4 +1,4 @@
-from food.models import ProcessedFood, FreshFood
+from food.models import ProcessedFood, FreshFood, CookedFood
 from django_filters.rest_framework import FilterSet, NumberFilter, CharFilter
 
 
@@ -19,4 +19,10 @@ class ProcessedFoodFilter(FoodFilter):
 class FreshFoodFilter(FoodFilter):
   class Meta:
     model = FreshFood
+    fields = ['no', 'code', 'name', 'cate_main', 'cate_sub']
+
+
+class CookedFoodFilter(FoodFilter):
+  class Meta:
+    model = CookedFood
     fields = ['no', 'code', 'name', 'cate_main', 'cate_sub']
