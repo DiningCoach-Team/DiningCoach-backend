@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from food.models import ProcessedFood, FreshFood, CookedFood
 from food.serializers.processed_serializers import ProcessedFoodSimpleSerializer, ProcessedFoodDetailSerializer
 from food.serializers.fresh_serializers import FreshFoodSimpleSerializer, FreshFoodDetailSerializer
-from food.serializers.cooked_serializers import CookedFoodSimpleSerializer
+from food.serializers.cooked_serializers import CookedFoodSimpleSerializer, CookedFoodDetailSerializer
 from food.exceptions import InvalidInputFormatException, NoResultFoundException
 from food.filters import ProcessedFoodFilter, FreshFoodFilter, CookedFoodFilter
 
@@ -118,3 +118,9 @@ class ProcessedFoodDetailView(FoodDetailView):
 class FreshFoodDetailView(FoodDetailView):
   queryset = FreshFood.objects.all()
   serializer_class = FreshFoodDetailSerializer
+
+
+# api/food/detail/cooked/<str:id>/
+class CookedFoodDetailView(FoodDetailView):
+  queryset = CookedFood.objects.all()
+  serializer_class = CookedFoodDetailSerializer
