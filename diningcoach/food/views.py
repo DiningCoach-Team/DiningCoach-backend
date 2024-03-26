@@ -22,7 +22,7 @@ class FoodScanView(ListAPIView):
   def validate_input(self):
     barcode_no = self.kwargs['barcode_no']
     if not barcode_no.isnumeric():
-      raise InvalidInputFormatException(detail='스캔하신 바코드의 입력 형식이 올바르지 않습니다.', code=status.HTTP_400_BAD_REQUEST)
+      raise InvalidInputFormatException(detail=('INVALID_FORMAT', '스캔하신 바코드의 입력 형식이 올바르지 않습니다.'))
 
   def get_queryset(self):
     self.validate_input()
@@ -33,7 +33,7 @@ class FoodScanView(ListAPIView):
     queryset = self.filter_queryset(self.get_queryset())
 
     if not queryset.exists():
-      raise NoResultFoundException(detail='스캔하신 바코드에 해당하는 상품이 존재하지 않습니다.', code=status.HTTP_204_NO_CONTENT)
+      raise NoResultFoundException(detail=('NO_RESULT', '스캔하신 바코드에 해당하는 상품이 존재하지 않습니다.'))
 
     serializer = self.get_serializer(queryset, many=True)
     return Response(serializer.data)
@@ -58,7 +58,7 @@ class FoodSearchView(ListAPIView):
     correct_query_params = ['no', 'code', 'name', 'cate_main', 'cate_sub']
     input_query_params = list(self.request.query_params.keys())
     if not all(key in correct_query_params for key in input_query_params):
-      raise InvalidInputFormatException(detail='입력하신 검색 조건 인자가 올바르지 않습니다.', code=status.HTTP_400_BAD_REQUEST)
+      raise InvalidInputFormatException(detail=('INVALID_FORMAT', '입력하신 검색 조건 인자가 올바르지 않습니다.'))
 
   def list(self, request, *args, **kwargs):
     self.validate_input()
@@ -66,7 +66,7 @@ class FoodSearchView(ListAPIView):
     queryset = self.filter_queryset(self.get_queryset())
 
     if not queryset.exists():
-      raise NoResultFoundException(detail='검색하신 조건에 해당하는 식품이 존재하지 않습니다.', code=status.HTTP_204_NO_CONTENT)
+      raise NoResultFoundException(detail=('NO_RESULT', '검색하신 조건에 해당하는 식품이 존재하지 않습니다.'))
 
     serializer = self.get_serializer(queryset, many=True)
     return Response(serializer.data)
@@ -100,7 +100,7 @@ class FoodDetailView(RetrieveAPIView):
   def validate_input(self):
     food_id = self.kwargs['id']
     if not food_id.isnumeric():
-      raise InvalidInputFormatException(detail='입력하신 식품 ID 형식이 올바르지 않습니다.', code=status.HTTP_400_BAD_REQUEST)
+      raise InvalidInputFormatException(detail=('INVALID_FORMAT', '입력하신 식품 ID 형식이 올바르지 않습니다.'))
 
   def retrieve(self, request, *args, **kwargs):
     self.validate_input()

@@ -11,7 +11,7 @@ def custom_exception_handler(exc, context):
     try:
       error_res['error_message'] = response.data['detail']
     except KeyError:
-      error_res['error_message'] = str(response.data)
+      error_res['error_message'] = ('UNKNOWN_ERROR', str(response.data))
 
     error_res['error_code'] = response.status_code
     error_res['error_time'] = datetime.now()
