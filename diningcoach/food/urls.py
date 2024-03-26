@@ -1,7 +1,9 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from food.views import (
-  FoodScanView, ProcessedFoodSearchView, FreshFoodSearchView, CookedFoodSearchView
+  FoodScanView,
+  ProcessedFoodSearchView, FreshFoodSearchView, CookedFoodSearchView,
+  ProcessedFoodDetailView
 )
 
 urlpatterns = [
@@ -12,7 +14,7 @@ urlpatterns = [
   path('search/fresh', FreshFoodSearchView.as_view()),
   path('search/cooked', CookedFoodSearchView.as_view()),
 
-  # path('detail/processed', ProcessedFoodDetailView.as_view()),
+  path('detail/processed/<str:id>/', ProcessedFoodDetailView.as_view()),
   # path('detail/fresh', FreshFoodDetailView.as_view()),
   # path('detail/cooked', CookedFoodDetailView.as_view()),
 ]

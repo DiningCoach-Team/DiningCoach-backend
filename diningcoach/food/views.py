@@ -9,7 +9,7 @@ from food.serializers.cooked_serializers import CookedFoodSimpleSerializer
 from food.exceptions import InvalidInputFormatException, NoResultFoundException
 from food.filters import ProcessedFoodFilter, FreshFoodFilter, CookedFoodFilter
 
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
@@ -91,3 +91,24 @@ class CookedFoodSearchView(FoodSearchView):
   queryset = CookedFood.objects.all()
   serializer_class = CookedFoodSimpleSerializer
   filterset_class = CookedFoodFilter
+
+
+# 'Food Detail' base class
+class FoodDetailView(RetrieveAPIView):
+  lookup_field = 'id'
+
+  def validate_input(self):
+    food_id = self.kwargs['id']
+    if not food_id.isnumeric():
+      raise InvalidInputFormatException(detail='입력하신 식품 ID 형식이 올바르지 않습니다.', code=status.HTTP_400_BAD_REQUEST)
+
+  def retrieve(self, request, *args, **kwargs):
+    self.validate_input()
+
+    return super().retrieve(request, *args, **kwargs)
+
+
+# api/food/detail/processed/<str:id>/
+class ProcessedFoodDetailView(FoodDetailView):
+  queryset = ProcessedFood.objects.all()
+  serializer_class = ProcessedFoodDetailSerializer
