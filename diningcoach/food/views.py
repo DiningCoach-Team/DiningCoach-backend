@@ -15,19 +15,19 @@ from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-# api/food/scan/<str:barcode_no>
+# api/food/scan/<str:barcode_no>/
 class FoodScanView(ListAPIView):
   serializer_class = ProcessedFoodDetailSerializer
 
-  def validate_input(self, barcode_no):
+  def validate_input(self):
+    barcode_no = self.kwargs['barcode_no']
     if not barcode_no.isnumeric():
       raise InvalidInputFormatException(detail='스캔하신 바코드의 입력 형식이 올바르지 않습니다.', code=status.HTTP_400_BAD_REQUEST)
 
   def get_queryset(self):
-    barcode_no = self.kwargs['barcode_no']
-    self.validate_input(barcode_no)
+    self.validate_input()
 
-    return ProcessedFood.objects.filter(barcode_no=barcode_no)
+    return ProcessedFood.objects.filter(barcode_no=self.kwargs['barcode_no'])
 
   def list(self, request, *args, **kwargs):
     queryset = self.filter_queryset(self.get_queryset())

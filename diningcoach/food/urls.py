@@ -5,7 +5,7 @@ from food.views import (
 )
 
 urlpatterns = [
-  path('scan/<str:barcode_no>', FoodScanView.as_view()),
+  path('scan/<str:barcode_no>/', FoodScanView.as_view()),
 
   # query parameter : no, code, name, cate_main, cate_sub
   path('search/processed', ProcessedFoodSearchView.as_view()),
