@@ -55,7 +55,7 @@ class FoodSearchView(ListAPIView):
   filter_backends = [DjangoFilterBackend]
 
   def validate_input(self):
-    correct_query_params = ['no', 'code', 'name', 'cate_main', 'cate_sub']
+    correct_query_params = ['id', 'code', 'name', 'cate_main', 'cate_sub']
     input_query_params = list(self.request.query_params.keys())
     if not all(key in correct_query_params for key in input_query_params):
       raise InvalidInputFormatException(detail=('INVALID_FORMAT', '입력하신 검색 조건 인자가 올바르지 않습니다.'))
@@ -72,21 +72,21 @@ class FoodSearchView(ListAPIView):
     return Response(serializer.data)
 
 
-# api/food/search/processed?no=?&code=?&name=?&cate_main=?&cate_sub=?
+# api/food/search/processed?id=?&code=?&name=?&cate_main=?&cate_sub=?
 class ProcessedFoodSearchView(FoodSearchView):
   queryset = ProcessedFood.objects.all()
   serializer_class = ProcessedFoodSimpleSerializer
   filterset_class = ProcessedFoodFilter
 
 
-# api/food/search/fresh?no=?&code=?&name=?&cate_main=?&cate_sub=?
+# api/food/search/fresh?id=?&code=?&name=?&cate_main=?&cate_sub=?
 class FreshFoodSearchView(FoodSearchView):
   queryset = FreshFood.objects.all()
   serializer_class = FreshFoodSimpleSerializer
   filterset_class = FreshFoodFilter
 
 
-# api/food/search/cooked?no=?&code=?&name=?&cate_main=?&cate_sub=?
+# api/food/search/cooked?id=?&code=?&name=?&cate_main=?&cate_sub=?
 class CookedFoodSearchView(FoodSearchView):
   queryset = CookedFood.objects.all()
   serializer_class = CookedFoodSimpleSerializer

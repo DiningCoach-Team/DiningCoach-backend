@@ -9,7 +9,7 @@ from food.views import (
 urlpatterns = [
   path('scan/<str:barcode_no>/', FoodScanView.as_view()),
 
-  # query parameter : no, code, name, cate_main, cate_sub
+  # query parameter : id, code, name, cate_main, cate_sub
   path('search/processed', ProcessedFoodSearchView.as_view()),
   path('search/fresh', FreshFoodSearchView.as_view()),
   path('search/cooked', CookedFoodSearchView.as_view()),
