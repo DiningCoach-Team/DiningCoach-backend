@@ -18,8 +18,8 @@ class UserManager(BaseUserManager):
 
   def create_user(self, email, password, **extra_fields):
     extra_fields.setdefault('is_staff', False)
+    extra_fields.setdefault('is_activate', True)
     extra_fields.setdefault('is_superuser', False)
-    extra_fields.setdefault('is_active', False)
 
     if not email:
       raise ValueError('User email must be set.')
@@ -33,8 +33,8 @@ class UserManager(BaseUserManager):
 
   def create_superuser(self, email=None, password=None, **extra_fields):
     extra_fields.setdefault('is_staff', True)
+    extra_fields.setdefault('is_activate', True)
     extra_fields.setdefault('is_superuser', True)
-    extra_fields.setdefault('is_active', True)
 
     if extra_fields.get('is_staff') is not True:
       raise ValueError('Superuser must have is_staff=True.')
@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
   email         = models.EmailField(verbose_name='이메일', unique=True)
   password      = models.CharField(verbose_name='비밀번호', max_length=255, blank=True, null=True)
   is_staff      = models.BooleanField(verbose_name='관리페이지 접근가능 여부', default=False)
-  is_activate   = models.BooleanField(verbose_name='계정활성 여부', default=False)
+  is_activate   = models.BooleanField(verbose_name='계정활성 여부', default=True)
   is_superuser  = models.BooleanField(verbose_name='모든 권한허용 여부', default=False)
   last_login    = models.DateTimeField(verbose_name='마지막 로그인 일시', auto_now=True)
   date_joined   = models.DateTimeField(verbose_name='계정생성 일시', auto_now_add=True)
