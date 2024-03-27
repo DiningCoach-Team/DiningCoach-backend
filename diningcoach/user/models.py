@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 import uuid
 
 
@@ -45,7 +45,7 @@ class UserManager(BaseUserManager):
 
 
 ##### 회원 #####
-class User(TimestampModel):
+class User(AbstractBaseUser, PermissionsMixin):
   PLATFORM_TYPES = [
     (0, 'DiningCoach'),
     (1, 'Kakao'),
@@ -55,14 +55,24 @@ class User(TimestampModel):
   ]
 
   id            = models.UUIDField(verbose_name='회원 아이디', primary_key=True, unique=True, editable=False, default=uuid.uuid4)
+  username      = models.CharField(verbose_name='이름', max_length=255, default='회원')
+  first_name    = None
+  last_name     = None
   email         = models.EmailField(verbose_name='이메일', unique=True)
   password      = models.CharField(verbose_name='비밀번호', max_length=255, blank=True, null=True)
-  nickname      = models.CharField(verbose_name='닉네임', max_length=255, default='회원')
+  is_staff      = models.BooleanField(verbose_name='관리페이지 접근가능 여부', default=False)
+  is_activate   = models.BooleanField(verbose_name='계정활성 여부', default=False)
+  is_superuser  = models.BooleanField(verbose_name='모든 권한허용 여부', default=False)
+  last_login    = models.DateTimeField(verbose_name='마지막 로그인 일시', auto_now=True)
+  date_joined   = models.DateTimeField(verbose_name='계정생성 일시', auto_now_add=True)
   platform_type = models.CharField(verbose_name='가입 플랫폼 종류', max_length=50, blank=True, null=True, choices=PLATFORM_TYPES)
   platform_id   = models.CharField(verbose_name='가입 플랫폼 ID', max_length=255, blank=True, null=True)
-  user_agent    = models.TextField(verbose_name='가입 환경 정보')
-  is_inactive   = models.BooleanField(verbose_name='휴면회원 여부', default=False)
-  is_deleted    = models.BooleanField(verbose_name='삭제 여부', default=False)
+  user_agent    = models.TextField(verbose_name='가입 환경 정보', blank=True, null=True)
+
+  objects = UserManager()
+
+  EMAIL_FIELD = 'email'
+  USERNAME_FIELD = EMAIL_FIELD
 
   class Meta:
     db_table = 'user'
@@ -70,12 +80,45 @@ class User(TimestampModel):
     verbose_name_plural = verbose_name
     indexes = [
       models.Index(fields=['id'], name='user_id_index'),
-      models.Index(fields=['nickname'], name='user_nickname_index'),
+      models.Index(fields=['username'], name='user_username_index'),
       models.Index(fields=['email'], name='user_email_index'),
     ]
 
   def __str__(self):
     return '회원 : ' + self.email
+
+
+# class User(TimestampModel):
+#   PLATFORM_TYPES = [
+#     (0, 'DiningCoach'),
+#     (1, 'Kakao'),
+#     (2, 'Naver'),
+#     (3, 'Google'),
+#     (4, 'Apple'),
+#   ]
+#
+#   id            = models.UUIDField(verbose_name='회원 아이디', primary_key=True, unique=True, editable=False, default=uuid.uuid4)
+#   email         = models.EmailField(verbose_name='이메일', unique=True)
+#   password      = models.CharField(verbose_name='비밀번호', max_length=255, blank=True, null=True)
+#   nickname      = models.CharField(verbose_name='닉네임', max_length=255, default='회원')
+#   platform_type = models.CharField(verbose_name='가입 플랫폼 종류', max_length=50, blank=True, null=True, choices=PLATFORM_TYPES)
+#   platform_id   = models.CharField(verbose_name='가입 플랫폼 ID', max_length=255, blank=True, null=True)
+#   user_agent    = models.TextField(verbose_name='가입 환경 정보')
+#   is_inactive   = models.BooleanField(verbose_name='휴면회원 여부', default=False)
+#   is_deleted    = models.BooleanField(verbose_name='삭제 여부', default=False)
+#
+#   class Meta:
+#     db_table = 'user'
+#     verbose_name = '회원'
+#     verbose_name_plural = verbose_name
+#     indexes = [
+#       models.Index(fields=['id'], name='user_id_index'),
+#       models.Index(fields=['nickname'], name='user_nickname_index'),
+#       models.Index(fields=['email'], name='user_email_index'),
+#     ]
+#
+#   def __str__(self):
+#     return '회원 : ' + self.email
 
 
 class UserBasic(models.Model):
