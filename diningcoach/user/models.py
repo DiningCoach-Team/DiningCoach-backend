@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
 
   def create_user(self, email, password, **extra_fields):
     extra_fields.setdefault('is_staff', False)
-    extra_fields.setdefault('is_activate', True)
+    extra_fields.setdefault('is_active', True)
     extra_fields.setdefault('is_superuser', False)
 
     if not email:
@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
 
   def create_superuser(self, email=None, password=None, **extra_fields):
     extra_fields.setdefault('is_staff', True)
-    extra_fields.setdefault('is_activate', True)
+    extra_fields.setdefault('is_active', True)
     extra_fields.setdefault('is_superuser', True)
 
     if extra_fields.get('is_staff') is not True:
@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
   email         = models.EmailField(verbose_name='이메일', unique=True)
   password      = models.CharField(verbose_name='비밀번호', max_length=255, blank=True, null=True)
   is_staff      = models.BooleanField(verbose_name='관리페이지 접근가능 여부', default=False)
-  is_activate   = models.BooleanField(verbose_name='계정활성 여부', default=True)
+  is_active     = models.BooleanField(verbose_name='계정활성 여부', default=True)
   is_superuser  = models.BooleanField(verbose_name='모든 권한허용 여부', default=False)
   last_login    = models.DateTimeField(verbose_name='마지막 로그인 일시', auto_now=True)
   date_joined   = models.DateTimeField(verbose_name='계정생성 일시', auto_now_add=True)
@@ -127,7 +127,7 @@ class UserProfile(TimestampModel):
     (2, 'Female'),
   ]
 
-  user              = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
+  user              = models.OneToOneField(User, verbose_name='회원', related_name='profile_user', on_delete=models.CASCADE, primary_key=True)
   consent_terms     = models.BooleanField(verbose_name='필수약관 동의 여부', default=False)
   receive_marketing = models.BooleanField(verbose_name='마케팅정보 수신 여부', default=False)
   gender            = models.CharField(verbose_name='성별', max_length=50, blank=True, null=True, choices=GENDER_TYPES)
@@ -145,8 +145,8 @@ class UserProfile(TimestampModel):
     return '회원 기본정보 : ' + self.user.email
 
 
-class UserInfo(TimestampModel):
-  user            = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
+class UserHealth(TimestampModel):
+  user            = models.OneToOneField(User, verbose_name='회원', related_name='health_user', on_delete=models.CASCADE, primary_key=True)
   height          = models.IntegerField(verbose_name='키', blank=True, null=True)
   weight          = models.IntegerField(verbose_name='몸무게', blank=True, null=True)
   workout_time    = models.IntegerField(verbose_name='평균 운동량', blank=True, null=True)
@@ -156,16 +156,16 @@ class UserInfo(TimestampModel):
   preference_info = models.TextField(verbose_name='선호 음식 정보', blank=True, null=True)
 
   class Meta:
-    db_table = 'user_info'
-    verbose_name = '회원 추가정보'
+    db_table = 'user_health'
+    verbose_name = '회원 건강정보'
     verbose_name_plural = verbose_name
 
   def __str__(self):
-    return '회원 추가정보 : ' + self.user.email
+    return '회원 건강정보 : ' + self.user.email
 
 
 class RefreshToken(TimestampModel):
-  user          = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
+  user          = models.OneToOneField(User, verbose_name='회원', related_name='token_user', on_delete=models.CASCADE, primary_key=True)
   refresh_token = models.CharField(verbose_name='리프레시 토큰', max_length=255)
   is_deleted    = models.BooleanField(verbose_name='삭제 여부', default=False)
 
