@@ -1,6 +1,6 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
-import uuid
 
 
 ##### 추상클래스 #####
@@ -121,7 +121,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 #     return '회원 : ' + self.email
 
 
-class UserBasic(models.Model):
+class UserProfile(TimestampModel):
   GENDER_TYPES = [
     (1, 'Male'),
     (2, 'Female'),
@@ -137,7 +137,7 @@ class UserBasic(models.Model):
   profile_image     = models.TextField(verbose_name='프로필 사진', blank=True, null=True)
 
   class Meta:
-    db_table = 'user_basic'
+    db_table = 'user_profile'
     verbose_name = '회원 기본정보'
     verbose_name_plural = verbose_name
 
@@ -145,7 +145,7 @@ class UserBasic(models.Model):
     return '회원 기본정보 : ' + self.user.email
 
 
-class UserExtra(models.Model):
+class UserInfo(TimestampModel):
   user            = models.OneToOneField(User, verbose_name='회원', on_delete=models.CASCADE, primary_key=True)
   height          = models.IntegerField(verbose_name='키', blank=True, null=True)
   weight          = models.IntegerField(verbose_name='몸무게', blank=True, null=True)
@@ -156,7 +156,7 @@ class UserExtra(models.Model):
   preference_info = models.TextField(verbose_name='선호 음식 정보', blank=True, null=True)
 
   class Meta:
-    db_table = 'user_extra'
+    db_table = 'user_info'
     verbose_name = '회원 추가정보'
     verbose_name_plural = verbose_name
 
