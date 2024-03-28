@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.models import update_last_login
 
 from user.models import User
 from user.serializers import UserSignUpSerializer, UserLoginSerializer
@@ -42,7 +43,34 @@ class UserSignUpView(GenericAPIView):
 
 # api/user/account/login/
 class UserLoginView(GenericAPIView):
-  pass
+  serializer_class = UserLoginSerializer
+
+  def post(self, request, *args, **kwargs):
+    # user = authenticate(email=request.data['email'], password=request.data['password'])
+    serializer = self.serializer_class(data=request.data)
+
+    if serializer.is_valid(raise_exception=True):
+      user = User.objects.get(email=request.data['email'])
+      update_last_login(None, user)
+
+      token = TokenObtainPairSerializer.get_token(user)
+      refresh_token = str(token)
+      access_token = str(token.access_token)
+
+      res_data = {
+        'user': serializer.data,
+        'message': 'Login Successful!',
+        'access_token': access_token,
+        'refresh_token': refresh_token,
+      }
+
+      response = Response(res_data, status=status.HTTP_200_OK)
+      response.set_cookie('access_token', access_token, httponly=True)
+      response.set_cookie('refresh_token', refresh_token, httponly=True)
+
+      return response
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # api/user/account/logout/
