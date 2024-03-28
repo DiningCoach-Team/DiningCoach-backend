@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 import re
 
-from user.models import User
+from user.models import User, UserProfile
 
 from rest_framework import serializers
 
@@ -67,3 +67,17 @@ class UserLoginSerializer(serializers.Serializer):
       raise serializers.ValidationError('비밀번호가 일치하지 않습니다.')
 
     return data
+
+
+class UserBaseRetrieveSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = User
+    exclude = ['password']
+
+
+class UserProfileRetrieveSerializer(serializers.ModelSerializer):
+  profile_user = UserBaseRetrieveSerializer(many=False, read_only=True)
+
+  class Meta:
+    model = UserProfile
+    fields = '__all__'
