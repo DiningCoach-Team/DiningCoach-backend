@@ -75,7 +75,16 @@ class UserLoginView(GenericAPIView):
 
 # api/user/account/logout/
 class UserLogoutView(GenericAPIView):
-  pass
+  def delete(self, request, *args, **kwargs):
+    res_data = {
+      'message': 'Logout Successful!'
+    }
+
+    response = Response(res_data, status=status.HTTP_200_OK)
+    response.delete_cookie('access_token')
+    response.delete_cookie('refresh_token')
+
+    return response
 
 
 # api/user/account/token/refresh/
