@@ -14,7 +14,7 @@ urlpatterns = [
   path('account/signup/', UserSignUpView.as_view()),
   path('account/login/', UserLoginView.as_view()),
   path('account/logout/', UserLogoutView.as_view()),
-  path('account/token/refresh/', CustomizedTokenRefreshView.as_view()),
+  path('account/token/refresh/', CustomizedTokenRefreshView.as_view()), # deprecated
 
   path('auth/kakao/', KakaoSignInView.as_view()),
   path('auth/google/', GoogleSignInView.as_view()),

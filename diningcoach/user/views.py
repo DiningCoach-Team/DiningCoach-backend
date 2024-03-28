@@ -1,3 +1,7 @@
+from diningcoach.settings import SECRET_KEY
+from jwt import decode
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
+
 from django.shortcuts import render
 from django.contrib.auth.models import update_last_login
 
@@ -89,7 +93,42 @@ class UserLogoutView(GenericAPIView):
 
 # api/user/account/token/refresh/
 class CustomizedTokenRefreshView(GenericAPIView):
-  pass
+  def get(self, request, *args, **kwargs):
+    # 토큰이 아직 유효한 경우
+    try:
+      access_token = request.COOKIES['access_token']
+      decode(access_token, SECRET_KEY, algorithms=['HS256']) # returns payload
+
+      res_data = {
+        'message': '토큰이 아직 만료되지 않았으므로 갱신할 필요가 없습니다.'
+      }
+      response = Response(res_data, status=status.HTTP_400_BAD_REQUEST)
+    # 토큰이 만료된 경우
+    except ExpiredSignatureError:
+      refresh_token = request.COOKIES['refresh_token']
+      serializer = TokenRefreshSerializer(data={'refresh': refresh_token})
+
+      if serializer.is_valid(raise_exception=True):
+        access_token = serializer.data['access']
+        refresh_token = serializer.data['refresh']
+        decode(access_token, SECRET_KEY, algorithms=['HS256']) # returns payload
+
+        res_data = {
+          'message': '토큰이 정상적으로 갱신되었습니다.'
+        }
+        response = Response(res_data, status=status.HTTP_200_OK)
+        response.set_cookie('access_token', access_token, httponly=True)
+        response.set_cookie('refresh_token', refresh_token, httponly=True)
+      else:
+        raise InvalidTokenError
+    # 토큰이 사용 불가한 경우
+    except InvalidTokenError:
+      res_data = {
+        'message': '토큰이 사용 불가하므로 갱신할 수 없습니다.'
+      }
+      response = Response(res_data, status=status.HTTP_400_BAD_REQUEST)
+
+    return response
 
 
 # api/user/auth/kakao/
