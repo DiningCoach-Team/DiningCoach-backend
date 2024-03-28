@@ -1,5 +1,8 @@
+from django.contrib.auth import authenticate
 import re
+
 from user.models import User
+
 from rest_framework import serializers
 
 
@@ -13,6 +16,8 @@ class UserSignUpSerializer(serializers.Serializer):
     email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
     if not re.match(email_format, value):
       raise serializers.ValidationError('이메일 형식이 올바르지 않습니다.')
+    elif User.objects.filter(email=value).exists():
+      raise serializers.ValidationError('해당 이메일로 등록된 계정이 이미 존재합니다.')
     return value
 
   # Password must have
@@ -48,8 +53,17 @@ class UserLoginSerializer(serializers.Serializer):
   email = serializers.EmailField(required=True)
   password = serializers.CharField(required=True, max_length=255)
 
-  def validate_email(self, value):
+  def validate(self, data):
+    # Validate email
     email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
-    if not re.match(email_format, value):
+    if not re.match(email_format, data['email']):
       raise serializers.ValidationError('이메일 형식이 올바르지 않습니다.')
-    return value
+    elif not User.objects.filter(email=data['email']).exists():
+      raise serializers.ValidationError('해당 이메일로 등록된 계정이 존재하지 않습니다.')
+
+    # Authenticate user
+    user = authenticate(email=data['email'], password=data['password'])
+    if user is None:
+      raise serializers.ValidationError('비밀번호가 일치하지 않습니다.')
+
+    return data
