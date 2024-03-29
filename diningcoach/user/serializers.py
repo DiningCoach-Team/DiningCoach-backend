@@ -10,7 +10,7 @@ class UserSignUpSerializer(serializers.Serializer):
   username = serializers.CharField(required=True, max_length=255)
   email = serializers.EmailField(required=True)
   password = serializers.CharField(required=True, max_length=255)
-  user_agent = serializers.CharField(required=True)
+  # user_agent = serializers.CharField(required=True)
 
   def validate_email(self, value):
     email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
@@ -43,7 +43,7 @@ class UserSignUpSerializer(serializers.Serializer):
       password=validated_data['password'],
       platform_type=(0, 'DiningCoach'),
       platform_id=None,
-      user_agent=validated_data['user_agent'],
+      user_agent=self.context.META['HTTP_USER_AGENT'],
     )
 
     return user
