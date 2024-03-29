@@ -80,6 +80,8 @@ class UserLoginView(GenericAPIView):
 
 # api/user/account/logout/
 class UserLogoutView(GenericAPIView):
+  permission_classes = [IsAuthenticated]
+
   def delete(self, request, *args, **kwargs):
     res_data = {
       'message': 'Logout Successful!'
@@ -92,8 +94,10 @@ class UserLogoutView(GenericAPIView):
     return response
 
 
-# api/user/account/token/refresh/
+# api/user/account/token/refresh/ -> deprecated
 class CustomizedTokenRefreshView(GenericAPIView):
+  permission_classes = [IsAuthenticated]
+
   def get(self, request, *args, **kwargs):
     # 토큰이 아직 유효한 경우
     try:
@@ -132,22 +136,22 @@ class CustomizedTokenRefreshView(GenericAPIView):
     return response
 
 
-# api/user/auth/kakao/
+# api/user/platform/kakao/
 class KakaoSignInView(APIView):
   pass
 
 
-# api/user/auth/google/
+# api/user/platform/google/
 class GoogleSignInView(APIView):
   pass
 
 
-# api/user/auth/apple/
+# api/user/platform/apple/
 class AppleSignInView(APIView):
   pass
 
 
-# api/user/auth/naver/
+# api/user/platform/naver/
 class NaverSignInView(APIView):
   pass
 
@@ -156,7 +160,7 @@ class NaverSignInView(APIView):
 class UserProfileView(RetrieveAPIView):
   queryset = User.objects.all()
   serializer_class = UserProfileRetrieveSerializer
-  permission_classes = (IsAuthenticated, )
+  permission_classes = [IsAuthenticated]
 
 
 # api/user/info/health/

@@ -16,10 +16,10 @@ urlpatterns = [
   path('account/logout/', UserLogoutView.as_view()),
   path('account/token/refresh/', CustomizedTokenRefreshView.as_view()), # deprecated
 
-  path('auth/kakao/', KakaoSignInView.as_view()),
-  path('auth/google/', GoogleSignInView.as_view()),
-  path('auth/apple/', AppleSignInView.as_view()),
-  path('auth/naver/', NaverSignInView.as_view()),
+  path('platform/kakao/', KakaoSignInView.as_view()),
+  path('platform/google/', GoogleSignInView.as_view()),
+  path('platform/apple/', AppleSignInView.as_view()),
+  path('platform/naver/', NaverSignInView.as_view()),
 
   path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
