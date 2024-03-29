@@ -27,7 +27,7 @@ class UserSignUpSerializer(serializers.Serializer):
   # 4) at least one digit. -> (?=.*?[0-9])
   # 5) at least one special character. -> (?=.*?[#?!@$%^&*-])
   def validate_password(self, value):
-    password_format = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).$'
+    password_format = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{,}$'
     if not re.match(password_format, value):
       raise serializers.ValidationError('비밀번호는 소문자, 대문자, 숫자, 특수문자를 각각 최소 1개 이상 포함하도록 설정해주세요.')
     elif len(value) < 8:
