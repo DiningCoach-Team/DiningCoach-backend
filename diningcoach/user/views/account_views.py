@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import update_last_login
 
 from user.models import User
-from user.serializers import UserSignUpSerializer, UserLoginSerializer, UserProfileRetrieveSerializer
+from user.serializers import UserSignUpSerializer, UserLoginSerializer
 
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
@@ -134,40 +134,3 @@ class CustomizedTokenRefreshView(GenericAPIView):
       response = Response(res_data, status=status.HTTP_400_BAD_REQUEST)
 
     return response
-
-
-# api/user/platform/kakao/
-class KakaoSignInView(APIView):
-  pass
-
-
-# api/user/platform/google/
-class GoogleSignInView(APIView):
-  pass
-
-
-# api/user/platform/apple/
-class AppleSignInView(APIView):
-  pass
-
-
-# api/user/platform/naver/
-class NaverSignInView(APIView):
-  pass
-
-
-# api/user/info/profile/
-class UserProfileView(RetrieveAPIView):
-  queryset = User.objects.all()
-  serializer_class = UserProfileRetrieveSerializer
-  permission_classes = [IsAuthenticated]
-
-
-# api/user/info/health/
-class UserHealthView(APIView):
-  pass
-
-
-# api/user/info/consent/
-class ConsentTermsView(APIView):
-  pass
