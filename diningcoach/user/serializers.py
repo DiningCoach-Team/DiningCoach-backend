@@ -4,9 +4,13 @@ import re
 from user.models import User, UserProfile
 
 from rest_framework import serializers
+from dj_rest_auth.registration.serializers import RegisterSerializer
 
 
 class UserSignUpSerializer(serializers.Serializer):
+  PLATFORM_TYPE = (0, 'DiningCoach')
+  PLATFORM_ID = None
+
   username = serializers.CharField(required=True, max_length=255)
   email = serializers.EmailField(required=True)
   password = serializers.CharField(required=True, max_length=255)
@@ -41,12 +45,41 @@ class UserSignUpSerializer(serializers.Serializer):
       username=validated_data['username'],
       email=validated_data['email'],
       password=validated_data['password'],
-      platform_type=(0, 'DiningCoach'),
-      platform_id=None,
+      platform_type=self.PLATFORM_TYPE,
+      platform_id=self.PLATFORM_ID,
       user_agent=self.context.META['HTTP_USER_AGENT'],
     )
 
     return user
+
+
+class AuthUserSignUpSerializer(RegisterSerializer):
+  PLATFORM_TYPE = (0, 'DiningCoach')
+  PLATFORM_ID = None
+
+  def validate_email(self, value):
+    email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    if not re.match(email_format, value):
+      raise serializers.ValidationError('이메일 형식이 올바르지 않습니다.')
+    elif User.objects.filter(email=value).exists():
+      raise serializers.ValidationError('해당 이메일로 등록된 계정이 이미 존재합니다.')
+    return value
+  
+  # Password must have
+  # 1) minimum 8 characters and maximum 16 characters in length. -> {8,16}
+  # 2) at least one uppercase alphabet. -> (?=.*?[A-Z])
+  # 3) at least one lowercase alphabet. -> (?=.*?[a-z])
+  # 4) at least one digit. -> (?=.*?[0-9])
+  # 5) at least one special character. -> (?=.*?[#?!@$%^&*-])
+  def validate_password1(self, value):
+    password_format = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{,}$'
+    if not re.match(password_format, value):
+      raise serializers.ValidationError('비밀번호는 소문자, 대문자, 숫자, 특수문자를 각각 최소 1개 이상 포함하도록 설정해주세요.')
+    elif len(value) < 8:
+      raise serializers.ValidationError('비밀번호는 8자리 이상으로 설정해주세요.')
+    elif len(value) > 16:
+      raise serializers.ValidationError('비밀번호는 16자리 이하로 설정해주세요.')
+    return value
 
 
 class UserLoginSerializer(serializers.Serializer):

@@ -166,17 +166,23 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'food.utils.custom_exception_handler',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PERMISSION_CLASSES': [
-      # 'rest_framework.permissions.IsAuthenticated',
       'rest_framework.permissions.AllowAny',
+      # 'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+      'rest_framework_simplejwt.authentication.JWTAuthentication',
+      # 'rest_framework.authentication.SessionAuthentication',
+    ],
 }
 
 REST_USE_JWT = True
-
-AUTH_USER_MODEL = 'user.User'
-
 SITE_ID = 1
+AUTH_USER_MODEL = 'user.User'
+REST_AUTH = {
+  # 'LOGIN_SERIALIZER' : 'user.serializers.AuthUserLoginSerializer',
+  'REGISTER_SERIALIZER' : 'user.serializers.AuthUserSignUpSerializer',
+}
+ACCOUNT_ADAPTER = 'user.adapter.CustomUserAccountAdapter'
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 ACCOUNT_USERNAME_REQUIRED = True
