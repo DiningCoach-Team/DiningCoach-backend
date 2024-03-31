@@ -16,9 +16,11 @@ django-environ==0.10.0
 django-filter==23.2
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
+drf-yasg==1.21.7
 exceptiongroup==1.2.0
 executing==2.0.1
 idna==3.4
+inflection==0.5.1
 ipykernel==6.29.3
 ipython==8.22.2
 jedi==0.19.1
@@ -44,6 +46,7 @@ PyJWT==2.8.0
 python-dateutil==2.9.0.post0
 python3-openid==3.2.0
 pytz==2023.3
+PyYAML==6.0.1
 pyzmq==25.1.2
 requests==2.31.0
 requests-oauthlib==2.0.0
@@ -55,5 +58,6 @@ tornado==6.4
 traitlets==5.14.2
 typing_extensions==4.10.0
 tzdata==2024.1
+uritemplate==4.1.1
 urllib3==2.0.4
 wcwidth==0.2.13

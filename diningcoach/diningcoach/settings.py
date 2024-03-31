@@ -33,8 +33,9 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+  '127.0.0.1',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -48,6 +49,9 @@ INSTALLED_APPS = [
 
     # django-filter
     'django_filters',
+
+    # drf-yasg
+    'drf_yasg',
 
     # djangorestframework
     'rest_framework',
