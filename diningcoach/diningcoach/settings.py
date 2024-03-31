@@ -179,8 +179,22 @@ REST_USE_JWT = True
 SITE_ID = 1
 AUTH_USER_MODEL = 'user.User'
 REST_AUTH = {
-  # 'LOGIN_SERIALIZER' : 'user.serializers.AuthUserLoginSerializer',
-  'REGISTER_SERIALIZER' : 'user.serializers.AuthUserSignUpSerializer',
+    # 'LOGIN_SERIALIZER': 'user.serializers.AuthUserLoginSerializer',
+    'REGISTER_SERIALIZER': 'user.serializers.AuthUserSignUpSerializer',
+    'REGISTER_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+
+    'SESSION_LOGIN': False,
+    'USE_JWT': True,
+
+    'JWT_AUTH_COOKIE': 'access_token',
+    'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
+    'JWT_AUTH_REFRESH_COOKIE_PATH': '/',
+    'JWT_AUTH_SECURE': False,
+    'JWT_AUTH_HTTPONLY': True,
+    'JWT_AUTH_SAMESITE': 'Lax',
+    'JWT_AUTH_RETURN_EXPIRATION': False,
+    'JWT_AUTH_COOKIE_USE_CSRF': True,
+    'JWT_AUTH_COOKIE_ENFORCE_CSRF_ON_UNAUTHENTICATED': False,
 }
 ACCOUNT_ADAPTER = 'user.adapter.CustomUserAccountAdapter'
 
@@ -197,6 +211,12 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': False,
+    'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
+
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
 }

@@ -1,7 +1,7 @@
-from diningcoach.settings import SECRET_KEY
 from jwt import decode
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 
+from django.conf import settings
 from django.shortcuts import render
 from django.contrib.auth.models import update_last_login
 
@@ -102,7 +102,7 @@ class CustomizedTokenRefreshView(GenericAPIView):
     # 토큰이 아직 유효한 경우
     try:
       access_token = request.COOKIES['access_token']
-      decode(access_token, SECRET_KEY, algorithms=['HS256']) # returns payload
+      decode(access_token, settings.SECRET_KEY, algorithms=['HS256']) # returns payload
 
       res_data = {
         'message': '토큰이 아직 만료되지 않았으므로 갱신할 필요가 없습니다.'
@@ -116,7 +116,7 @@ class CustomizedTokenRefreshView(GenericAPIView):
       if serializer.is_valid(raise_exception=True):
         access_token = serializer.data['access']
         refresh_token = serializer.data['refresh']
-        decode(access_token, SECRET_KEY, algorithms=['HS256']) # returns payload
+        decode(access_token, settings.SECRET_KEY, algorithms=['HS256']) # returns payload
 
         res_data = {
           'message': '토큰이 정상적으로 갱신되었습니다.'
