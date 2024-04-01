@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 import re
 
-from user.models import User, UserProfile
+from user.models import User, UserProfile, UserHealth
 
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
@@ -102,15 +102,33 @@ class UserLoginSerializer(serializers.Serializer):
     return data
 
 
-class UserBaseRetrieveSerializer(serializers.ModelSerializer):
+class UserDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    exclude = ['password']
+    exclude = ['password', 'is_staff', 'is_superuser', 'groups', 'user_permissions']
 
 
-class UserProfileRetrieveSerializer(serializers.ModelSerializer):
-  profile_user = UserBaseRetrieveSerializer(many=False, read_only=True)
-
+class UserProfileDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserProfile
     fields = '__all__'
+
+
+class UserHealthDefaultSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = UserHealth
+    fields = '__all__'
+
+
+class UserProfileRetrieveSerializer(serializers.ModelSerializer):
+  profile_user = UserProfileDefaultSerializer(many=False, read_only=True)
+
+  class Meta(UserDefaultSerializer.Meta):
+    pass
+
+
+class UserHealthRetrieveSerializer(serializers.ModelSerializer):
+  health_user = UserHealthDefaultSerializer(many=False, read_only=True)
+
+  class Meta(UserDefaultSerializer.Meta):
+    pass
