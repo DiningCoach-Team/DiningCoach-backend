@@ -182,6 +182,8 @@ REST_FRAMEWORK = {
 REST_USE_JWT = True
 SITE_ID = 1
 AUTH_USER_MODEL = 'user.User'
+
+# dj-rest-auth
 REST_AUTH = {
     # 'LOGIN_SERIALIZER': 'user.serializers.AuthUserLoginSerializer',
     'REGISTER_SERIALIZER': 'user.serializers.AuthUserSignUpSerializer',
@@ -206,9 +208,15 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# django-allauth
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'django.contrib.auth.backends.ModelBackend',
+)
 
 # DRF Simple JWT
 SIMPLE_JWT = {

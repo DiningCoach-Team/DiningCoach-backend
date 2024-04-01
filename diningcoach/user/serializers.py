@@ -17,6 +17,14 @@ class UserSignUpSerializer(serializers.Serializer):
   password = serializers.CharField(required=True, max_length=255)
   # user_agent = serializers.CharField(required=True)
 
+  def validate_username(self, value):
+    email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    if re.match(email_format, value):
+      raise InvalidUsernameFormatException(detail=('INVALID_USERNAME', '이름(사용자명)은 이메일 형식이 될 수 없습니다.'))
+    elif User.objects.filter(username=value).exists():
+      raise AccountAlreadyExistsException(detail=('ACCOUNT_ALREADY_EXISTS', '해당 이름(사용자명)으로 등록된 계정이 이미 존재합니다.'))
+    return value
+
   def validate_email(self, value):
     email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
     if not re.match(email_format, value):
@@ -57,6 +65,14 @@ class UserSignUpSerializer(serializers.Serializer):
 class AuthUserSignUpSerializer(RegisterSerializer):
   PLATFORM_TYPE = (0, 'DiningCoach')
   PLATFORM_ID = None
+
+  def validate_username(self, value):
+    email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    if re.match(email_format, value):
+      raise InvalidUsernameFormatException(detail=('INVALID_USERNAME', '이름(사용자명)은 이메일 형식이 될 수 없습니다.'))
+    elif User.objects.filter(username=value).exists():
+      raise AccountAlreadyExistsException(detail=('ACCOUNT_ALREADY_EXISTS', '해당 이름(사용자명)으로 등록된 계정이 이미 존재합니다.'))
+    return value
 
   def validate_email(self, value):
     email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
