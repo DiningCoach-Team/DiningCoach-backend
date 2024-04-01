@@ -7,6 +7,7 @@ from django.contrib.auth.models import update_last_login
 
 from user.models import User, UserProfile, UserHealth
 from user.serializers import UserSignUpSerializer, UserLoginSerializer
+from user.exceptions import CreateDataFailedException
 
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
@@ -24,10 +25,7 @@ class UserSignUpView(GenericAPIView):
     try:
       user_id = getattr(user, 'id')
     except AttributeError:
-      res_data = {
-        'message': '회원 데이터는 성공적으로 생성되었으나, 프로필 데이터와 건강 데이터 생성에는 실패하였습니다.'
-      }
-      return Response(res_data, status=status.HTTP_400_BAD_REQUEST)
+      raise CreateDataFailedException(detail=('CREATE_DATA_FAILED', '회원 데이터는 성공적으로 생성되었으나, 프로필 데이터와 건강 데이터 생성에는 실패하였습니다.'))
 
     user_profile = UserProfile.objects.create(
       user_id=user_id,
