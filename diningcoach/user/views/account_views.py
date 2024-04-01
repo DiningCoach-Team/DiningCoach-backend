@@ -95,7 +95,7 @@ class UserLogoutView(GenericAPIView):
 
 
 # api/user/account/token/refresh/ -> deprecated
-class CustomizedTokenRefreshView(GenericAPIView):
+class CustomizedTokenRefreshView(APIView):
   permission_classes = [IsAuthenticated]
 
   def get(self, request, *args, **kwargs):
