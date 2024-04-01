@@ -51,3 +51,14 @@ urlpatterns += [
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
+
+
+# Custom error responses
+from diningcoach.exceptions import (
+  custom_bad_request, custom_permission_denied, custom_page_not_found, custom_server_error
+)
+
+handler400 = custom_bad_request
+handler403 = custom_permission_denied
+handler404 = custom_page_not_found
+handler500 = custom_server_error
