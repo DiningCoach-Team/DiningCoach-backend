@@ -2,21 +2,29 @@ from django.urls import path, include
 
 from user.views.account_views import UserSignUpView, UserLoginView, UserLogoutView, CustomizedTokenRefreshView
 from user.views.platform_views import KakaoSignInView, GoogleSignInView, AppleSignInView, NaverSignInView
-from user.views.info_views import UserProfileView, UserHealthView, ConsentTermsView
+from user.views.info_views import UserBasicView, UserProfileView, UserHealthView, ConsentTermsView
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
+from dj_rest_auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
+from dj_rest_auth.registration.views import RegisterView
+
+
 urlpatterns = [
-  path('account/signup/', UserSignUpView.as_view()),
-  path('account/login/', UserLoginView.as_view()),
-  path('account/logout/', UserLogoutView.as_view()),
-  path('account/token/refresh/', CustomizedTokenRefreshView.as_view()), # deprecated
+  path('account/signup/', RegisterView.as_view()),
+  path('account/login/', LoginView.as_view()),
+  path('account/logout/', LogoutView.as_view()),
+  path('account/password/change/', PasswordChangeView.as_view()),
+  path('account/password/reset/', PasswordResetView.as_view()),
+  path('account/password/reset/confirm/', PasswordResetConfirmView.as_view()),
+  # path('account/token/refresh/', CustomizedTokenRefreshView.as_view()), # deprecated
 
   path('platform/kakao/', KakaoSignInView.as_view()),
   path('platform/google/', GoogleSignInView.as_view()),
   path('platform/apple/', AppleSignInView.as_view()),
   path('platform/naver/', NaverSignInView.as_view()),
 
+  path('info/basic/', UserBasicView.as_view()),
   path('info/profile/', UserProfileView.as_view()),
   path('info/health/', UserHealthView.as_view()),
   path('info/consent/', ConsentTermsView.as_view()),
@@ -25,9 +33,9 @@ urlpatterns = [
   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
   path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
-  path('auth/', include('dj_rest_auth.urls')),
-  path('auth/registration/', include('dj_rest_auth.registration.urls')),
-  path('allauth/', include('allauth.urls')),
+  # path('auth/', include('dj_rest_auth.urls')),
+  # path('auth/registration/', include('dj_rest_auth.registration.urls')),
+  # path('allauth/', include('allauth.urls')),
   # path('allauth/account/', include('allauth.account.urls')),
 ]
 
