@@ -81,6 +81,28 @@ class AuthUserSignUpSerializer(RegisterSerializer):
       raise serializers.ValidationError('비밀번호는 16자리 이하로 설정해주세요.')
     return value
 
+  def save(self, request):
+    user = super().save(request)
+
+    try:
+      user_id = getattr(user, 'id')
+    except AttributeError:
+      raise serializers.ValidationError('회원 데이터는 성공적으로 생성되었으나, 프로필 데이터와 건강 데이터 생성에는 실패하였습니다.')
+
+    user_profile = UserProfile.objects.create(
+      user_id=user_id,
+      consent_terms=False,
+      receive_marketing=False,
+    )
+    user_profile.save()
+
+    user_health = UserHealth.objects.create(
+      user_id=user_id,
+    )
+    user_health.save()
+
+    return user
+
 
 class UserLoginSerializer(serializers.Serializer):
   email = serializers.EmailField(required=True)

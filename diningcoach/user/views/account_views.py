@@ -5,7 +5,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.contrib.auth.models import update_last_login
 
-from user.models import User
+from user.models import User, UserProfile, UserHealth
 from user.serializers import UserSignUpSerializer, UserLoginSerializer
 
 from rest_framework.views import APIView
@@ -16,15 +16,40 @@ from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
 
-# api/user/account/signup/
+# POST 'api/user/account/signup/'
 class UserSignUpView(GenericAPIView):
   serializer_class = UserSignUpSerializer
+
+  def save_related(self, user):
+    try:
+      user_id = getattr(user, 'id')
+    except AttributeError:
+      res_data = {
+        'message': '회원 데이터는 성공적으로 생성되었으나, 프로필 데이터와 건강 데이터 생성에는 실패하였습니다.'
+      }
+      return Response(res_data, status=status.HTTP_400_BAD_REQUEST)
+
+    user_profile = UserProfile.objects.create(
+      user_id=user_id,
+      consent_terms=False,
+      receive_marketing=False,
+    )
+    user_profile.save()
+
+    user_health = UserHealth.objects.create(
+      user_id=user_id,
+    )
+    user_health.save()
+
+    return user
 
   def post(self, request, *args, **kwargs):
     serializer = self.serializer_class(data=request.data, context=request)
 
     if serializer.is_valid(raise_exception=True):
       user = serializer.save()
+
+      self.save_related(user)
 
       token = TokenObtainPairSerializer.get_token(user)
       refresh_token = str(token)
@@ -46,7 +71,7 @@ class UserSignUpView(GenericAPIView):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# api/user/account/login/
+# POST 'api/user/account/login/'
 class UserLoginView(GenericAPIView):
   serializer_class = UserLoginSerializer
 
@@ -78,7 +103,7 @@ class UserLoginView(GenericAPIView):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# api/user/account/logout/
+# DELETE 'api/user/account/logout/'
 class UserLogoutView(GenericAPIView):
   permission_classes = [IsAuthenticated]
 
@@ -94,7 +119,7 @@ class UserLogoutView(GenericAPIView):
     return response
 
 
-# api/user/account/token/refresh/ -> deprecated
+# GET 'api/user/account/token/refresh/' -> deprecated
 class CustomizedTokenRefreshView(APIView):
   permission_classes = [IsAuthenticated]
 
