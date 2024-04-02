@@ -9,6 +9,10 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 
 
 class UserSignUpSerializer(serializers.Serializer):
+  # This serializer is not used
+  pass
+
+  '''
   PLATFORM_TYPE = (0, 'DiningCoach')
   PLATFORM_ID = None
 
@@ -60,6 +64,7 @@ class UserSignUpSerializer(serializers.Serializer):
     )
 
     return user
+  '''
 
 
 class AuthUserSignUpSerializer(RegisterSerializer):
@@ -122,6 +127,10 @@ class AuthUserSignUpSerializer(RegisterSerializer):
 
 
 class UserLoginSerializer(serializers.Serializer):
+  # This serializer is not used
+  pass
+
+  '''
   email = serializers.EmailField(required=True)
   password = serializers.CharField(required=True, max_length=255)
 
@@ -139,6 +148,7 @@ class UserLoginSerializer(serializers.Serializer):
       raise AuthenticationFailedException(detail=('AUTHENTICATION_FAILED', '비밀번호가 일치하지 않습니다.'))
 
     return data
+  '''
 
 
 class UserDefaultSerializer(serializers.ModelSerializer):

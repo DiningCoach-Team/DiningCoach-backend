@@ -17,8 +17,12 @@ from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
 
-# POST 'api/user/account/signup/'
+# POST 'api/user/account/signup/' -> not used
 class UserSignUpView(GenericAPIView):
+  # This view is not used
+  pass
+
+  '''
   serializer_class = UserSignUpSerializer
 
   def save_related(self, user):
@@ -67,10 +71,15 @@ class UserSignUpView(GenericAPIView):
       return response
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  '''
 
 
-# POST 'api/user/account/login/'
+# POST 'api/user/account/login/' -> not used
 class UserLoginView(GenericAPIView):
+  # This view is not used
+  pass
+
+  '''
   serializer_class = UserLoginSerializer
 
   def post(self, request, *args, **kwargs):
@@ -99,10 +108,15 @@ class UserLoginView(GenericAPIView):
       return response
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  '''
 
 
-# DELETE 'api/user/account/logout/'
+# DELETE 'api/user/account/logout/' -> not used
 class UserLogoutView(GenericAPIView):
+  # This view is not used
+  pass
+
+  '''
   permission_classes = [IsAuthenticated]
 
   def delete(self, request, *args, **kwargs):
@@ -115,10 +129,15 @@ class UserLogoutView(GenericAPIView):
     response.delete_cookie('refresh_token')
 
     return response
+  '''
 
 
-# GET 'api/user/account/token/refresh/' -> deprecated
+# GET 'api/user/account/token/refresh/' -> deprecated(not used)
 class CustomizedTokenRefreshView(APIView):
+  # This view is not used
+  pass
+
+  '''
   permission_classes = [IsAuthenticated]
 
   def get(self, request, *args, **kwargs):
@@ -157,3 +176,4 @@ class CustomizedTokenRefreshView(APIView):
       response = Response(res_data, status=status.HTTP_400_BAD_REQUEST)
 
     return response
+  '''

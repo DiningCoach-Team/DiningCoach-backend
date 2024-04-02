@@ -11,13 +11,16 @@ from dj_rest_auth.registration.views import RegisterView
 
 
 urlpatterns = [
-  path('account/signup/', RegisterView.as_view()),
-  path('account/login/', LoginView.as_view()),
-  path('account/logout/', LogoutView.as_view()),
-  path('account/password/change/', PasswordChangeView.as_view()),
-  path('account/password/reset/', PasswordResetView.as_view()),
-  path('account/password/reset/confirm/', PasswordResetConfirmView.as_view()),
-  # path('account/token/refresh/', CustomizedTokenRefreshView.as_view()), # deprecated
+  path('account/signup/', RegisterView.as_view(), name='account_signup'),
+  path('account/login/', LoginView.as_view(), name='account_login'),
+  path('account/logout/', LogoutView.as_view(), name='account_logout'),
+  path('account/password/change/', PasswordChangeView.as_view(), name='account_password_change'),
+  path('account/password/reset/', PasswordResetView.as_view(), name='account_password_reset'),
+  path('account/password/reset/confirm/', PasswordResetConfirmView.as_view(), name='account_password_reset_confirm'),
+
+  path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+  path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+  path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
   path('platform/kakao/', KakaoSignInView.as_view()),
   path('platform/google/', GoogleSignInView.as_view()),
@@ -28,10 +31,6 @@ urlpatterns = [
   path('info/profile/', UserProfileView.as_view()),
   path('info/health/', UserHealthView.as_view()),
   path('info/consent/', ConsentTermsView.as_view()),
-
-  path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-  path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-  path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
   # path('auth/', include('dj_rest_auth.urls')),
   # path('auth/registration/', include('dj_rest_auth.registration.urls')),
