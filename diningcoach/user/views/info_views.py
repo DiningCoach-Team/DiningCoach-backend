@@ -1,19 +1,20 @@
 from django.shortcuts import get_object_or_404
 
 from user.models import User
-from user.serializers.info_serializers import UserBasicRetrieveSerializer, UserProfileRetrieveSerializer
+from user.serializers.info_serializers import UserBasicRetrieveSerializer, UserProfileRetrieveSerializer, UserHealthRetrieveSerializer
 
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, RetrieveAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 
-class UserAbstractRetrieveView(RetrieveAPIView):
+class UserAbstractRetrieveView(RetrieveUpdateAPIView):
   queryset = User.objects.all()
-  serializer_class = None
+  retrieve_serializer_class = None
+  update_serializer_class = None
   permission_classes = [IsAuthenticated]
   lookup_field = 'id'
 
@@ -21,18 +22,26 @@ class UserAbstractRetrieveView(RetrieveAPIView):
     manual_parameters=[openapi.Parameter(name='Authorization', in_=openapi.IN_HEADER, description='Access Token', type=openapi.TYPE_STRING)]
   )
   def retrieve(self, request, *args, **kwargs):
+    self.serializer_class = self.retrieve_serializer_class
     self.kwargs['id'] = self.request.user.id
     return super().retrieve(request, *args, **kwargs)
 
+  @swagger_auto_schema(
+    manual_parameters=[openapi.Parameter(name='Authorization', in_=openapi.IN_HEADER, description='Access Token', type=openapi.TYPE_STRING)]
+  )
+  def update(self, request, *args, **kwargs):
+    self.serializer_class = self.update_serializer_class
+    return super().update(request, *args, **kwargs)
 
-# GET 'api/user/info/basic/'
+
+# GET, PUT 'api/user/info/basic/'
 class UserBasicRetrieveView(UserAbstractRetrieveView):
-  serializer_class = UserBasicRetrieveSerializer
+  retrieve_serializer_class = UserBasicRetrieveSerializer
 
 
-# GET 'api/user/info/profile/'
+# GET, PUT 'api/user/info/profile/'
 class UserProfileRetrieveView(UserAbstractRetrieveView):
-  serializer_class = UserProfileRetrieveSerializer
+  retrieve_serializer_class = UserProfileRetrieveSerializer
 
   '''
   def get_object(self):
@@ -48,11 +57,11 @@ class UserProfileRetrieveView(UserAbstractRetrieveView):
   '''
 
 
-# GET 'api/user/info/health/'
-class UserHealthRetrieveView(APIView):
-  pass
+# GET, PUT 'api/user/info/health/'
+class UserHealthRetrieveView(UserAbstractRetrieveView):
+  retrieve_serializer_class = UserHealthRetrieveSerializer
 
 
-# PATCH 'api/user/info/consent/'
+# GET, PUT 'api/user/info/consent/'
 class ConsentTermsUpdateView(APIView):
   pass
