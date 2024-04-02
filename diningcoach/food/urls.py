@@ -3,7 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from food.views import (
   FoodScanView,
   ProcessedFoodSearchView, FreshFoodSearchView, CookedFoodSearchView,
-  ProcessedFoodDetailView, FreshFoodDetailView, CookedFoodDetailView
+  ProcessedFoodDetailView, FreshFoodDetailView, CookedFoodDetailView,
 )
 
 urlpatterns = [
@@ -19,4 +19,4 @@ urlpatterns = [
   path('detail/cooked/<str:id>/', CookedFoodDetailView.as_view()),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)
