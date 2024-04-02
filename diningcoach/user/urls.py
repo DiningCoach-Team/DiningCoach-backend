@@ -2,7 +2,7 @@ from django.urls import path, include
 
 from user.views.account_views import UserSignUpView, UserLoginView, UserLogoutView, CustomizedTokenRefreshView
 from user.views.platform_views import KakaoSignInView, GoogleSignInView, AppleSignInView, NaverSignInView
-from user.views.info_views import UserBasicView, UserProfileView, UserHealthView, ConsentTermsView
+from user.views.info_views import UserBasicRetrieveView, UserProfileRetrieveView, UserHealthRetrieveView, ConsentTermsUpdateView
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
@@ -27,10 +27,10 @@ urlpatterns = [
   path('platform/apple/', AppleSignInView.as_view()),
   path('platform/naver/', NaverSignInView.as_view()),
 
-  path('info/basic/', UserBasicView.as_view()),
-  path('info/profile/', UserProfileView.as_view()),
-  path('info/health/', UserHealthView.as_view()),
-  path('info/consent/', ConsentTermsView.as_view()),
+  path('info/basic/', UserBasicRetrieveView.as_view()),
+  path('info/profile/', UserProfileRetrieveView.as_view()),
+  path('info/health/', UserHealthRetrieveView.as_view()),
+  path('info/consent/', ConsentTermsUpdateView.as_view()),
 
   # path('auth/', include('dj_rest_auth.urls')),
   # path('auth/registration/', include('dj_rest_auth.registration.urls')),

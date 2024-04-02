@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 
 from user.models import User
-from user.serializers.info_serializers import UserProfileRetrieveSerializer
+from user.serializers.info_serializers import UserBasicRetrieveSerializer, UserProfileRetrieveSerializer
 
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
@@ -11,15 +11,9 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 
-# GET 'api/user/info/basic/'
-class UserBasicView(APIView):
-  pass
-
-
-# GET 'api/user/info/profile/'
-class UserProfileView(RetrieveAPIView):
+class UserAbstractRetrieveView(RetrieveAPIView):
   queryset = User.objects.all()
-  serializer_class = UserProfileRetrieveSerializer
+  serializer_class = None
   permission_classes = [IsAuthenticated]
   lookup_field = 'id'
 
@@ -30,23 +24,35 @@ class UserProfileView(RetrieveAPIView):
     self.kwargs['id'] = self.request.user.id
     return super().retrieve(request, *args, **kwargs)
 
-  # def get_object(self):
-  #   queryset = self.filter_queryset(self.get_queryset())
-  #
-  #   filter_kwargs = {'id': self.request.user.id}
-  #   obj = get_object_or_404(queryset, **filter_kwargs)
-  #
-  #   # May raise a permission denied
-  #   self.check_object_permissions(self.request, obj)
-  #
-  #   return obj
+
+# GET 'api/user/info/basic/'
+class UserBasicRetrieveView(UserAbstractRetrieveView):
+  serializer_class = UserBasicRetrieveSerializer
+
+
+# GET 'api/user/info/profile/'
+class UserProfileRetrieveView(UserAbstractRetrieveView):
+  serializer_class = UserProfileRetrieveSerializer
+
+  '''
+  def get_object(self):
+    queryset = self.filter_queryset(self.get_queryset())
+  
+    filter_kwargs = {'id': self.request.user.id}
+    obj = get_object_or_404(queryset, **filter_kwargs)
+  
+    # May raise a permission denied
+    self.check_object_permissions(self.request, obj)
+  
+    return obj
+  '''
 
 
 # GET 'api/user/info/health/'
-class UserHealthView(APIView):
+class UserHealthRetrieveView(APIView):
   pass
 
 
 # PATCH 'api/user/info/consent/'
-class ConsentTermsView(APIView):
+class ConsentTermsUpdateView(APIView):
   pass

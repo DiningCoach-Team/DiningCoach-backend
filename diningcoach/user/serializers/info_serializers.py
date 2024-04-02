@@ -4,33 +4,39 @@ from user.exceptions import *
 from rest_framework import serializers
 
 
-class UserDefaultSerializer(serializers.ModelSerializer):
+class _UserBasicDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     exclude = ['password', 'is_staff', 'is_superuser', 'groups', 'user_permissions']
 
 
-class UserProfileDefaultSerializer(serializers.ModelSerializer):
+class _UserProfileDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserProfile
     fields = '__all__'
 
 
-class UserHealthDefaultSerializer(serializers.ModelSerializer):
+class _UserHealthDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserHealth
     fields = '__all__'
 
 
-class UserProfileRetrieveSerializer(serializers.ModelSerializer):
-  profile_info = UserProfileDefaultSerializer(many=False, read_only=True)
+class UserBasicRetrieveSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = User
+    exclude = ['password']
 
-  class Meta(UserDefaultSerializer.Meta):
+
+class UserProfileRetrieveSerializer(serializers.ModelSerializer):
+  profile_info = _UserProfileDefaultSerializer(many=False, read_only=True)
+
+  class Meta(_UserBasicDefaultSerializer.Meta):
     pass
 
 
 class UserHealthRetrieveSerializer(serializers.ModelSerializer):
-  health_info = UserHealthDefaultSerializer(many=False, read_only=True)
+  health_info =_UserHealthDefaultSerializer(many=False, read_only=True)
 
-  class Meta(UserDefaultSerializer.Meta):
+  class Meta(_UserBasicDefaultSerializer.Meta):
     pass
