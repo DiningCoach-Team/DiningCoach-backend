@@ -170,14 +170,14 @@ class UserHealthDefaultSerializer(serializers.ModelSerializer):
 
 
 class UserProfileRetrieveSerializer(serializers.ModelSerializer):
-  profile_user = UserProfileDefaultSerializer(many=False, read_only=True)
+  profile_info = UserProfileDefaultSerializer(many=False, read_only=True)
 
   class Meta(UserDefaultSerializer.Meta):
     pass
 
 
 class UserHealthRetrieveSerializer(serializers.ModelSerializer):
-  health_user = UserHealthDefaultSerializer(many=False, read_only=True)
+  health_info = UserHealthDefaultSerializer(many=False, read_only=True)
 
   class Meta(UserDefaultSerializer.Meta):
     pass
