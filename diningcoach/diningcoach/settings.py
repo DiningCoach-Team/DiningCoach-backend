@@ -202,8 +202,8 @@ SIMPLE_JWT = {
 
 # dj-rest-auth
 REST_AUTH = {
-    # 'LOGIN_SERIALIZER': 'user.serializers.AuthUserLoginSerializer',
-    'REGISTER_SERIALIZER': 'user.serializers.AuthUserSignUpSerializer',
+    # 'LOGIN_SERIALIZER': 'user.serializers.account_serializers.AuthUserLoginSerializer',
+    'REGISTER_SERIALIZER': 'user.serializers.account_serializers.AuthUserSignUpSerializer',
     'REGISTER_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
 
     'SESSION_LOGIN': False,

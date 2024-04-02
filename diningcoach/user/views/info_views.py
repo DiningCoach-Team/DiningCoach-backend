@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 
 from user.models import User
-from user.serializers import UserProfileRetrieveSerializer
+from user.serializers.info_serializers import UserProfileRetrieveSerializer
 
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
