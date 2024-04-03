@@ -1,3 +1,5 @@
+import re
+
 from user.models import User, UserProfile, UserHealth
 from user.exceptions import *
 
@@ -74,11 +76,37 @@ class UserHealthRetrieveSerializer(serializers.ModelSerializer):
 
 ##### Update Serializer #####
 class UserBasicUpdateSerializer(UserBasicDefaultSerializer):
-  pass
+  def validate_username(self, value):
+    if self.context['request'].user.username == value:
+      return value
+    email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    if re.match(email_format, value):
+      raise InvalidUsernameFormatException(detail=('INVALID_USERNAME', '이름(사용자명)은 이메일 형식이 될 수 없습니다.'))
+    elif User.objects.filter(username=value).exists():
+      raise AccountAlreadyExistsException(detail=('ACCOUNT_ALREADY_EXISTS', '해당 이름(사용자명)으로 등록된 계정이 이미 존재합니다.'))
+    return value
+
+  def validate_email(self, value):
+    if self.context['request'].user.email == value:
+      return value
+    email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    if not re.match(email_format, value):
+      raise InvalidEmailFormatException(detail=('INVALID_EMAIL', '이메일 입력 형식이 올바르지 않습니다.'))
+    elif User.objects.filter(email=value).exists():
+      raise AccountAlreadyExistsException(detail=('ACCOUNT_ALREADY_EXISTS', '해당 이메일로 등록된 계정이 이미 존재합니다.'))
+    return value
+
+  def validate_is_active(self, value):
+    if not self.context['request'].user.is_active and not value:
+      raise UpdateNotAllowedException(detail=('UPDATE_NOT_ALLOWED', '계정이 비활성화되어 있어 정보를 변경할 수 없습니다.'))
+    return value
 
 
 class UserProfileUpdateSerializer(UserProfileDefaultSerializer):
-  pass
+  def validate(self, data):
+    if not self.context['request'].user.is_active:
+      raise UpdateNotAllowedException(detail=('UPDATE_NOT_ALLOWED', '계정이 비활성화되어 있어 정보를 변경할 수 없습니다.'))
+    return data
 
   '''
   profile_info = UserProfileDefaultSerializer(many=False, read_only=False)
@@ -97,7 +125,10 @@ class UserProfileUpdateSerializer(UserProfileDefaultSerializer):
 
 
 class UserHealthUpdateSerializer(UserHealthDefaultSerializer):
-  pass
+  def validate(self, data):
+    if not self.context['request'].user.is_active:
+      raise UpdateNotAllowedException(detail=('UPDATE_NOT_ALLOWED', '계정이 비활성화되어 있어 정보를 변경할 수 없습니다.'))
+    return data
 
   '''
   health_info = UserHealthDefaultSerializer(many=False, read_only=False)
