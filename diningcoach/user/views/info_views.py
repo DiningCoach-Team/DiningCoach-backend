@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 
 from user.models import User, UserProfile, UserHealth
 from user.serializers.info_serializers import (
+  UserBasicDefaultSerializer, UserProfileDefaultSerializer, UserHealthDefaultSerializer,
   UserBasicRetrieveSerializer, UserProfileRetrieveSerializer, UserHealthRetrieveSerializer,
   UserBasicUpdateSerializer, UserProfileUpdateSerializer, UserHealthUpdateSerializer,
 )
@@ -16,10 +17,10 @@ from drf_yasg.utils import swagger_auto_schema
 
 
 class UserAbstractView(RetrieveUpdateAPIView):
-  serializer_class = None
   permission_classes = [IsAuthenticated]
 
   queryset = None
+  serializer_class = None
   serializer_classes = {'GET': None, 'PUT': None}
   lookup_field = None
 
@@ -47,6 +48,7 @@ class UserAbstractView(RetrieveUpdateAPIView):
 # GET, PUT 'api/user/info/basic/'
 class UserBasicView(UserAbstractView):
   queryset = User.objects.all()
+  serializer_class = UserBasicDefaultSerializer
   serializer_classes = {'GET': UserBasicRetrieveSerializer, 'PUT': UserBasicUpdateSerializer}
   lookup_field = 'id'
 
@@ -54,6 +56,7 @@ class UserBasicView(UserAbstractView):
 # GET, PUT 'api/user/info/profile/'
 class UserProfileView(UserAbstractView):
   queryset = UserProfile.objects.all()
+  serializer_class = UserProfileDefaultSerializer
   serializer_classes = {'GET': UserProfileRetrieveSerializer, 'PUT': UserProfileUpdateSerializer}
   lookup_field = 'user_id'
 
@@ -74,10 +77,6 @@ class UserProfileView(UserAbstractView):
 # GET, PUT 'api/user/info/health/'
 class UserHealthView(UserAbstractView):
   queryset = UserHealth.objects.all()
+  serializer_class = UserHealthDefaultSerializer
   serializer_classes = {'GET': UserHealthRetrieveSerializer, 'PUT': UserHealthUpdateSerializer}
   lookup_field = 'user_id'
-
-
-# GET, PUT 'api/user/info/consent/'
-class ConsentTermsView(APIView):
-  pass
