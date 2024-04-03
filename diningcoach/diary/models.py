@@ -30,10 +30,10 @@ class NutritionModel(models.Model):
 ##### 식단일기 #####
 class MealDiary(TimestampModel):
   MEAL_TYPES = [
-    (1, 'Breakfast'),
-    (2, 'Lunch'),
-    (3, 'Dinner'),
-    (4, 'Snack'),
+    ('B', 'Breakfast'),
+    ('L', 'Lunch'),
+    ('D', 'Dinner'),
+    ('S', 'Snack'),
   ]
 
   date         = models.DateField(verbose_name='식단일기 날짜')
@@ -70,9 +70,9 @@ class MealImage(TimestampModel):
 
 class MealFood(models.Model):
   FOOD_TYPES = [
-    (1, 'Processed Food'),
-    (2, 'Fresh Food'),
-    (3, 'Cooked Food'),
+    ('P', 'Processed Food'),
+    ('F', 'Fresh Food'),
+    ('C', 'Cooked Food'),
   ]
 
   food_code = models.CharField(verbose_name='식품코드', max_length=50)

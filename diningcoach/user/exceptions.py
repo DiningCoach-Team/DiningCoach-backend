@@ -45,3 +45,8 @@ class AuthenticationFailedException(UserCustomException):
 class CreateDataFailedException(UserCustomException):
   def __init__(self, detail=('CREATE_DATA_FAILED', '데이터 생성에 실패하였습니다.'), code=status.HTTP_500_INTERNAL_SERVER_ERROR):
     super().__init__(detail, code)
+
+
+class UpdateNotAllowedException(UserCustomException):
+  def __init__(self, detail=('UPDATE_NOT_ALLOWED', '데이터를 변경할 권한이 없습니다.'), code=status.HTTP_401_UNAUTHORIZED):
+    super().__init__(detail, code)

@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import update_last_login
 
 from user.models import User, UserProfile, UserHealth
-from user.serializers import UserSignUpSerializer, UserLoginSerializer
+from user.serializers.account_serializers import UserSignUpSerializer, UserLoginSerializer
 from user.exceptions import CreateDataFailedException
 
 from rest_framework.views import APIView

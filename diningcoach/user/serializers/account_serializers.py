@@ -13,7 +13,7 @@ class UserSignUpSerializer(serializers.Serializer):
   pass
 
   '''
-  PLATFORM_TYPE = (0, 'DiningCoach')
+  PLATFORM_TYPE = 'D'
   PLATFORM_ID = None
 
   username = serializers.CharField(required=True, max_length=255)
@@ -68,7 +68,7 @@ class UserSignUpSerializer(serializers.Serializer):
 
 
 class AuthUserSignUpSerializer(RegisterSerializer):
-  PLATFORM_TYPE = (0, 'DiningCoach')
+  PLATFORM_TYPE = 'D'
   PLATFORM_ID = None
 
   def validate_username(self, value):
@@ -149,35 +149,3 @@ class UserLoginSerializer(serializers.Serializer):
 
     return data
   '''
-
-
-class UserDefaultSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = User
-    exclude = ['password', 'is_staff', 'is_superuser', 'groups', 'user_permissions']
-
-
-class UserProfileDefaultSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = UserProfile
-    fields = '__all__'
-
-
-class UserHealthDefaultSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = UserHealth
-    fields = '__all__'
-
-
-class UserProfileRetrieveSerializer(serializers.ModelSerializer):
-  profile_user = UserProfileDefaultSerializer(many=False, read_only=True)
-
-  class Meta(UserDefaultSerializer.Meta):
-    pass
-
-
-class UserHealthRetrieveSerializer(serializers.ModelSerializer):
-  health_user = UserHealthDefaultSerializer(many=False, read_only=True)
-
-  class Meta(UserDefaultSerializer.Meta):
-    pass
