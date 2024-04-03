@@ -4,24 +4,32 @@ from user.exceptions import *
 from rest_framework import serializers
 
 
-class _UserBasicDefaultSerializer(serializers.ModelSerializer):
+##### Default Serializer #####
+class UserBasicDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    exclude = ['password', 'is_staff', 'is_superuser', 'groups', 'user_permissions']
+    fields = ['username', 'email', 'is_active', 'platform_type', 'platform_id']
 
 
-class _UserProfileDefaultSerializer(serializers.ModelSerializer):
+class UserProfileDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserProfile
-    fields = '__all__'
+    exclude = ['user', 'created_at', 'updated_at']
+    # extra_kwargs = {
+    #   'user': {'validators': []},
+    # }
 
 
-class _UserHealthDefaultSerializer(serializers.ModelSerializer):
+class UserHealthDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserHealth
-    fields = '__all__'
+    exclude = ['user', 'created_at', 'updated_at']
+    # extra_kwargs = {
+    #   'user': {'validators': []},
+    # }
 
 
+##### Retrieve Serializer #####
 class UserBasicRetrieveSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
@@ -29,14 +37,79 @@ class UserBasicRetrieveSerializer(serializers.ModelSerializer):
 
 
 class UserProfileRetrieveSerializer(serializers.ModelSerializer):
-  profile_info = _UserProfileDefaultSerializer(many=False, read_only=True)
+  class Meta:
+    model = UserProfile
+    fields = '__all__'
 
-  class Meta(_UserBasicDefaultSerializer.Meta):
+  def to_representation(self, instance):
+    ret = super().to_representation(instance)
+    ret['user'] = UserBasicRetrieveSerializer(instance=instance.user).data
+    return ret
+
+  '''
+  profile_info = UserProfileDefaultSerializer(many=False, read_only=True)
+
+  class Meta(UserBasicDefaultSerializer.Meta):
     pass
+  '''
 
 
 class UserHealthRetrieveSerializer(serializers.ModelSerializer):
-  health_info =_UserHealthDefaultSerializer(many=False, read_only=True)
+  class Meta:
+    model = UserHealth
+    fields = '__all__'
 
-  class Meta(_UserBasicDefaultSerializer.Meta):
+  def to_representation(self, instance):
+    ret = super().to_representation(instance)
+    ret['user'] = UserBasicRetrieveSerializer(instance=instance.user).data
+    return ret
+
+  '''
+  health_info = UserHealthDefaultSerializer(many=False, read_only=True)
+
+  class Meta(UserBasicDefaultSerializer.Meta):
     pass
+  '''
+
+
+##### Update Serializer #####
+class UserBasicUpdateSerializer(UserBasicDefaultSerializer):
+  pass
+
+
+class UserProfileUpdateSerializer(UserProfileDefaultSerializer):
+  pass
+
+  '''
+  profile_info = UserProfileDefaultSerializer(many=False, read_only=False)
+
+  class Meta(UserBasicDefaultSerializer.Meta):
+    pass
+
+  def update(self, instance, validated_data):
+    profile_serializer = self.fields['profile_info']
+    profile_instance = instance.profile_info
+    profile_validated_data = validated_data.pop('profile_info')
+
+    profile_serializer.update(profile_instance, profile_validated_data)
+    return super().update(instance, validated_data)
+  '''
+
+
+class UserHealthUpdateSerializer(UserHealthDefaultSerializer):
+  pass
+
+  '''
+  health_info = UserHealthDefaultSerializer(many=False, read_only=False)
+
+  class Meta(UserBasicDefaultSerializer.Meta):
+    pass
+
+  def update(self, instance, validated_data):
+    health_serializer = self.fields['health_info']
+    health_instance = instance.health_info
+    health_validated_data = validated_data.pop('health_info')
+
+    health_serializer.update(health_instance, health_validated_data)
+    return super().update(instance, validated_data)
+  '''
