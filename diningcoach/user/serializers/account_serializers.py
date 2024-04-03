@@ -13,7 +13,7 @@ class UserSignUpSerializer(serializers.Serializer):
   pass
 
   '''
-  PLATFORM_TYPE = (0, 'DiningCoach')
+  PLATFORM_TYPE = 'D'
   PLATFORM_ID = None
 
   username = serializers.CharField(required=True, max_length=255)
@@ -68,7 +68,7 @@ class UserSignUpSerializer(serializers.Serializer):
 
 
 class AuthUserSignUpSerializer(RegisterSerializer):
-  PLATFORM_TYPE = (0, 'DiningCoach')
+  PLATFORM_TYPE = 'D'
   PLATFORM_ID = None
 
   def validate_username(self, value):

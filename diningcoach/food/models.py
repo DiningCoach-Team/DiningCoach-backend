@@ -62,9 +62,9 @@ class CustomizedFood(FoodModel):
 
 class CustomizedMetadata(TimestampModel):
   FOOD_TYPES = [
-    (1, 'Processed Food'),
-    (2, 'Fresh Food'),
-    (3, 'Cooked Food'),
+    ('P', 'Processed Food'),
+    ('F', 'Fresh Food'),
+    ('C', 'Cooked Food'),
   ]
 
   customized_food = models.OneToOneField(CustomizedFood, verbose_name='사용자 추가식품', on_delete=models.CASCADE, primary_key=True)

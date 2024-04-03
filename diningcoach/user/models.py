@@ -47,11 +47,11 @@ class UserManager(BaseUserManager):
 ##### 회원 #####
 class User(AbstractBaseUser, PermissionsMixin):
   PLATFORM_TYPES = [
-    (0, 'DiningCoach'),
-    (1, 'Kakao'),
-    (2, 'Naver'),
-    (3, 'Google'),
-    (4, 'Apple'),
+    ('D', 'DiningCoach'),
+    ('K', 'Kakao'),
+    ('N', 'Naver'),
+    ('G', 'Google'),
+    ('A', 'Apple'),
   ]
 
   id            = models.UUIDField(verbose_name='회원 아이디', primary_key=True, unique=True, editable=False, default=uuid.uuid4)
@@ -127,8 +127,8 @@ class User(TimestampModel):
 
 class UserProfile(TimestampModel):
   GENDER_TYPES = [
-    (1, 'Male'),
-    (2, 'Female'),
+    ('M', 'Male'),
+    ('F', 'Female'),
   ]
 
   user              = models.OneToOneField(User, verbose_name='회원', related_name='profile_info', on_delete=models.CASCADE, primary_key=True)
