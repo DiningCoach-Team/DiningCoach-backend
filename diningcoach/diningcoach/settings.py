@@ -59,6 +59,7 @@ INSTALLED_APPS = [
 
     # djangorestframework-simplejwt
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 
     # dj-rest-auth
     'dj_rest_auth',
@@ -169,7 +170,12 @@ AUTH_USER_MODEL = 'user.User'
 
 SITE_ID = 1
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # Django REST framework
 REST_FRAMEWORK = {
@@ -204,6 +210,7 @@ SIMPLE_JWT = {
 REST_AUTH = {
     # 'LOGIN_SERIALIZER': 'user.serializers.account_serializers.AuthUserLoginSerializer',
     'REGISTER_SERIALIZER': 'user.serializers.account_serializers.AuthUserSignUpSerializer',
+    'PASSWORD_RESET_CONFIRM_SERIALIZER': 'user.serializers.account_serializers.AuthPasswordResetConfirmSerializer',
     'REGISTER_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
 
     'SESSION_LOGIN': False,

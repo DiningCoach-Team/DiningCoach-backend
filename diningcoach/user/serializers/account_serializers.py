@@ -5,6 +5,7 @@ from user.models import User, UserProfile, UserHealth
 from user.exceptions import *
 
 from rest_framework import serializers
+from dj_rest_auth.serializers import PasswordResetConfirmSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
 
@@ -149,3 +150,17 @@ class UserLoginSerializer(serializers.Serializer):
 
     return data
   '''
+
+
+class AuthPasswordResetConfirmSerializer(PasswordResetConfirmSerializer):
+  uid = None
+  token = None
+
+  def validate(self, attrs):
+    uid = self.context['view'].kwargs['uidb64']
+    token = self.context['view'].kwargs['token']
+
+    attrs['uid'] = uid
+    attrs['token'] = token
+
+    return super().validate(attrs)
