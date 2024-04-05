@@ -1,22 +1,23 @@
 from django.urls import path, include
 
-from user.views.account_views import UserSignUpView, UserLoginView, UserLogoutView, CustomizedTokenRefreshView
+from user.views.account_views import (
+  AccountSignUpView, AccountLoginView, AccountLogoutView,
+  AccountPasswordChangeView, AccountPasswordResetView, AccountPasswordResetConfirmView,
+  UserSignUpView, UserLoginView, UserLogoutView, UserCustomizedTokenRefreshView
+)
 from user.views.platform_views import KakaoSignInView, GoogleSignInView, AppleSignInView, NaverSignInView
 from user.views.info_views import UserBasicView, UserProfileView, UserHealthView
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
-from dj_rest_auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
-from dj_rest_auth.registration.views import RegisterView
-
 
 urlpatterns = [
-  path('account/signup/', RegisterView.as_view(), name='account_signup'),
-  path('account/login/', LoginView.as_view(), name='account_login'),
-  path('account/logout/', LogoutView.as_view(), name='account_logout'),
-  path('account/password/change/', PasswordChangeView.as_view(), name='account_password_change'),
-  path('account/password/reset/', PasswordResetView.as_view(), name='account_password_reset'),
-  path('account/password/reset/confirm/<str:uidb64>/<str:token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+  path('account/signup/', AccountSignUpView.as_view(), name='signup'),
+  path('account/login/', AccountLoginView.as_view(), name='login'),
+  path('account/logout/', AccountLogoutView.as_view(), name='logout'),
+  path('account/password/change/', AccountPasswordChangeView.as_view(), name='password_change'),
+  path('account/password/reset/', AccountPasswordResetView.as_view(), name='password_reset'),
+  path('account/password/reset/confirm/<str:uidb64>/<str:token>/', AccountPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 
   path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
