@@ -1,6 +1,13 @@
 import uuid
+import os
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+
+
+##### 이미지 업로드 주소 #####
+def profile_image_path(instance, filename):
+  user_id = instance.id
+  return os.path.join('user', user_id, filename)
 
 
 ##### 추상클래스 #####
@@ -138,7 +145,7 @@ class UserProfile(TimestampModel):
   birthdate         = models.DateField(verbose_name='생년월일', blank=True, null=True)
   phone_num         = models.CharField(verbose_name='전화번호', max_length=50, blank=True, null=True)
   intro             = models.TextField(verbose_name='자기소개', blank=True, null=True)
-  profile_image     = models.TextField(verbose_name='프로필 사진', blank=True, null=True)
+  profile_image     = models.ImageField(verbose_name='프로필 사진', upload_to=profile_image_path, blank=True, null=True)
 
   class Meta:
     db_table = 'user_profile'
