@@ -5,9 +5,9 @@ from user.models import User
 
 ##### 이미지 업로드 주소 #####
 def meal_image_path(instance, filename):
-  user_id = instance.meal.user.id
+  user_id = str(instance.meal.user.id)
   meal_date = str(instance.meal.date)
-  meal_type = instance.meal.meal_type
+  meal_type = str(instance.meal.meal_type)
   return os.path.join('diary', user_id, meal_date, meal_type, filename)
 
 
