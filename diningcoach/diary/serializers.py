@@ -1,7 +1,7 @@
 from django.db import transaction, IntegrityError
 
 from diary.models import MealDiary, MealImage, MealFood, MealNutrition
-from diary.exceptions import InvalidNumArgsException, UserInfoNotProvidedException, CreateDataFailedException
+from diary.exceptions import InvalidNumArgsException, UserInfoNotProvidedException, CreateDataFailedException, DuplicateMealDiaryException
 
 from rest_framework import serializers
 
@@ -67,6 +67,23 @@ class MealDiaryWriteSerializer(serializers.Serializer):
   meal_image = MealImageWriteEditSerializer(required=False, many=True, read_only=False)
   meal_food  = MealFoodWriteEditSerializer(required=True, many=True, read_only=False)
 
+  def validate(self, attrs):
+    request = self.context['request']
+
+    if request and hasattr(request, 'user'):
+      user_id = request.user.id
+    else:
+      raise UserInfoNotProvidedException(detail=('USER_NOT_PROVIDED', '유저 정보를 불러올 수 없습니다.'))
+
+    meal_diary = MealDiary.objects.filter(
+      date__exact=attrs['date'],
+      meal_type__exact=attrs['meal_type'],
+      user_id__exact=user_id,
+    )
+    if meal_diary.exists():
+      raise DuplicateMealDiaryException(detail=('DUPLICATE_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 이미 존재합니다.'))
+    return super().validate(attrs)
+
   def set_meal_image(self, meal_image_list, meal_diary_id):
     if len(meal_image_list) > 5:
       raise InvalidNumArgsException(detail=('ABOVE_MAX_NUM', '한 식단일기에 등록 가능한 이미지의 개수는 최대 5개입니다.'))
@@ -93,12 +110,7 @@ class MealDiaryWriteSerializer(serializers.Serializer):
 
   @transaction.atomic
   def create(self, validated_data):
-    request = self.context['request']
-
-    if request and hasattr(request, 'user'):
-      user_id = request.user.id
-    else:
-      raise UserInfoNotProvidedException(detail=('USER_NOT_PROVIDED', '유저 정보를 불러올 수 없습니다.'))
+    user_id = self.context['request'].user.id
 
     try:
       with transaction.atomic():
