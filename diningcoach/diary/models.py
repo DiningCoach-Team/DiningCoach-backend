@@ -1,5 +1,6 @@
 import os
 from django.db import models
+from diningcoach.storage import FileSystemOverwriteStorage
 from user.models import User
 
 
@@ -63,7 +64,7 @@ class MealDiary(TimestampModel):
 
 
 class MealImage(TimestampModel):
-  image_url   = models.ImageField(verbose_name='이미지 주소', upload_to=meal_image_path)
+  image_url   = models.ImageField(verbose_name='이미지 주소', upload_to=meal_image_path, storage=FileSystemOverwriteStorage())
   device_info = models.TextField(verbose_name='기기 정보', blank=True, null=True)
   is_deleted  = models.BooleanField(verbose_name='삭제 여부', default=False)
   meal        = models.ForeignKey(MealDiary, verbose_name='식사일기', related_name='meal_image', on_delete=models.CASCADE)
