@@ -1,3 +1,5 @@
+import re
+
 from django.shortcuts import render
 from django.db.models import Prefetch
 
@@ -6,7 +8,7 @@ from diary.serializers import (
   MealDiaryDefaultSerializer,
   MealDiaryReadSerializer, MealDiaryWriteSerializer, MealDiaryEditSerializer, MealDiaryDeleteSerializer,
 )
-from diary.exceptions import NoMealDiaryFoundException, MultipleMealDiaryFoundException
+from diary.exceptions import InvalidInputFormatException, NoMealDiaryFoundException, MultipleMealDiaryFoundException
 
 from rest_framework.generics import RetrieveAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -35,7 +37,18 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
   permission_classes = [IsAuthenticated]
   lookup_field = 'user_id'
 
+  def validate_input(self):
+    date_input = self.kwargs['date']
+    date_format = r'\b(19\d\d|20\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b'
+    if not re.match(date_format, date_input):
+      raise InvalidInputFormatException(detail=('INVALID_INPUT_FORMAT', '날짜 형식은 YYYY-MM-DD이 되어야 합니다.'))
+
+    meal_type_input = self.kwargs['meal_type']
+    if meal_type_input not in ['B', 'L', 'D', 'S']:
+      raise InvalidInputFormatException(detail=('INVALID_INPUT_FORMAT', '식사 종류는 B,L,D,S 중에 하나가 되어야 합니다.'))
+
   def get_queryset(self):
+    self.validate_input()
     self.kwargs[self.lookup_field] = self.request.user.id
 
     meal_diary = MealDiary.objects.filter(

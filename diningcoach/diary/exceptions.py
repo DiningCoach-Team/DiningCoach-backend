@@ -12,6 +12,11 @@ class UserCustomException(APIException):
     self.status_code = code
 
 
+class InvalidInputFormatException(UserCustomException):
+  def __init__(self, detail=('INVALID_INPUT_FORMAT', '입력값의 형식이 올바르지 않습니다.'), code=status.HTTP_400_BAD_REQUEST):
+    super().__init__(detail, code)
+
+
 class InvalidNumArgsException(UserCustomException):
   def __init__(self, detail=('INVALID_NUM_ARGUMENTS', '올바른 인자의 개수가 아닙니다.'), code=status.HTTP_400_BAD_REQUEST):
     super().__init__(detail, code)
