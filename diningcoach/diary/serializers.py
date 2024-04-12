@@ -1,12 +1,69 @@
 from django.db import transaction, IntegrityError
 
 from diary.models import MealDiary, MealImage, MealFood, MealNutrition
-from diary.exceptions import InvalidNumArgsException, UserInfoNotProvidedException, CreateDataFailedException, DuplicateMealDiaryException
+from diary.exceptions import (
+  InvalidNumArgsException, UserInfoNotProvidedException,
+  CreateDataFailedException, DuplicateMealDiaryException,
+)
 
 from rest_framework import serializers
 
 
-##### Write, Edit, Delete Serializer #####
+##### Default Serializer #####
+class MealImageDefaultSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MealImage
+    fields = '__all__'
+
+
+class MealFoodDefaultSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MealFood
+    fields = '__all__'
+
+
+class MealNutritionDefaultSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MealNutrition
+    fields = '__all__'
+
+
+class MealDiaryDefaultSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MealDiary
+    fields = '__all__'
+
+
+##### Read Serializer #####
+class MealImageReadSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MealImage
+    exclude = ['device_info', 'is_deleted', 'meal']
+
+
+class MealFoodReadSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MealFood
+    exclude = ['meal']
+
+
+class MealNutritionReadSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MealNutrition
+    exclude = ['meal']
+
+
+class MealDiaryReadSerializer(serializers.ModelSerializer):
+  meal_image = MealImageReadSerializer(many=True, read_only=True)
+  meal_food = MealFoodReadSerializer(many=True, read_only=True)
+  meal_nutrition = MealNutritionReadSerializer(many=False, read_only=True)
+
+  class Meta:
+    model = MealDiary
+    fields = '__all__'
+
+
+##### Write, Edit Serializer #####
 class MealImageWriteEditSerializer(serializers.ModelSerializer):
   IS_DELETED_DEFAULT = False
 
@@ -135,3 +192,16 @@ class MealDiaryWriteSerializer(serializers.Serializer):
       raise CreateDataFailedException(detail=('CREATE_DATA_FAILED', '식단일기 등록에 실패하였습니다. 다시 시도해주세요.'))
 
     return meal_diary
+
+
+class MealDiaryEditSerializer(serializers.Serializer):
+  class Meta:
+    model = MealDiary
+    fields = '__all__'
+
+
+##### Delete Serializer #####
+class MealDiaryDeleteSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MealDiary
+    fields = '__all__'
