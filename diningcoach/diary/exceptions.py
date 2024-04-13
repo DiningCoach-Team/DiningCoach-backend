@@ -32,6 +32,11 @@ class CreateDataFailedException(UserCustomException):
     super().__init__(detail, code)
 
 
+class UpdateDataFailedException(UserCustomException):
+  def __init__(self, detail=('UPDATE_DATA_FAILED', '데이터 수정에 실패하였습니다.'), code=status.HTTP_500_INTERNAL_SERVER_ERROR):
+    super().__init__(detail, code)
+
+
 class DuplicateMealDiaryException(UserCustomException):
   def __init__(self, detail=('DUPLICATE_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 이미 존재합니다.'), code=status.HTTP_400_BAD_REQUEST):
     super().__init__(detail, code)

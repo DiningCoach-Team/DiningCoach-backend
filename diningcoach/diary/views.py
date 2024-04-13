@@ -56,9 +56,9 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
       meal_type__exact=self.kwargs['meal_type'],
       is_deleted__exact=False,
     ).prefetch_related(
-      Prefetch('meal_image', queryset=MealImage.objects.filter(is_deleted__exact=False), to_attr='meal_image_data'),
-      Prefetch('meal_food', queryset=MealFood.objects.all(), to_attr='meal_food_data'),
-      Prefetch('meal_nutrition', queryset=MealNutrition.objects.all(), to_attr='meal_nutrition_data'),
+      Prefetch('meal_image', queryset=MealImage.objects.filter(is_deleted__exact=False)),
+      Prefetch('meal_food', queryset=MealFood.objects.all()),
+      Prefetch('meal_nutrition', queryset=MealNutrition.objects.all()),
     )
 
     if not meal_diary.exists():
