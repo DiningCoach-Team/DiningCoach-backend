@@ -1,7 +1,7 @@
 import re
 
 from django.shortcuts import render
-from django.db.models import Prefetch
+from django.db.models import Prefetch, F
 
 from diary.models import MealDiary, MealImage, MealFood, MealNutrition
 from diary.serializers import (
@@ -10,6 +10,8 @@ from diary.serializers import (
 )
 from diary.exceptions import InvalidInputFormatException, NoMealDiaryFoundException, MultipleMealDiaryFoundException
 
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import MethodNotAllowed
@@ -91,10 +93,24 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
   )
   def delete(self, request, *args, **kwargs):
     self.serializer_class = self.serializer_classes['DELETE']
-    return super().delete(request, *args, **kwargs)
+
+    instance = self.get_object()
+    serializer = self.get_serializer(instance)
+
+    if instance is not None:
+      instance.is_deleted = ~F('is_deleted')
+      instance.save()
+      instance.refresh_from_db()
+
+      if instance.is_deleted:
+        return Response(data={'message': '식단일기가 성공적으로 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
+      else:
+        return Response(serializer.data)
+    else:
+      raise NoMealDiaryFoundException(detail=('NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
 
 
-# 'api/diary/meal/<str:date>/<str:meal_type>/share?flag=?' -> GET
+# 'api/diary/meal/<str:date>/<str:meal_type>/share/' -> GET
 class MealDiaryShareView(RetrieveAPIView):
   pass
 
