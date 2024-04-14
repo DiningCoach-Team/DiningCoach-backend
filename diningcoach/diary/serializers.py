@@ -9,6 +9,7 @@ from diary.exceptions import (
   InvalidNumArgsException, UserInfoNotProvidedException,
   CreateDataFailedException, UpdateDataFailedException, DuplicateMealDiaryException,
 )
+from diary.tasks import write_meal_nutrition, edit_meal_nutrition
 
 from rest_framework import serializers
 
@@ -23,12 +24,6 @@ class MealImageDefaultSerializer(serializers.ModelSerializer):
 class MealFoodDefaultSerializer(serializers.ModelSerializer):
   class Meta:
     model = MealFood
-    fields = '__all__'
-
-
-class MealNutritionDefaultSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = MealNutrition
     fields = '__all__'
 
 
@@ -200,6 +195,8 @@ class MealDiaryWriteSerializer(MealDiaryWriteEditSerializer):
     except IntegrityError:
       raise CreateDataFailedException(detail=('CREATE_DATA_FAILED', '식단일기 등록에 실패하였습니다. 다시 시도해주세요.'))
 
+    write_meal_nutrition(meal_diary.id)
+
     return meal_diary
 
 
@@ -314,6 +311,8 @@ class MealDiaryEditSerializer(MealDiaryWriteEditSerializer):
           self.edit_meal_food(meal_diary.meal_food.all(), validated_data['meal_food'], meal_diary.id)
     except IntegrityError:
       raise UpdateDataFailedException(detail=('UPDATE_DATA_FAILED', '식단일기 수정에 실패하였습니다. 다시 시도해주세요.'))
+
+    edit_meal_nutrition(meal_diary.id)
 
     return meal_diary
 
