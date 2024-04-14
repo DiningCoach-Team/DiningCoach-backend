@@ -111,8 +111,36 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
 
 
 # 'api/diary/meal/<str:date>/<str:meal_type>/share/' -> GET
-class MealDiaryShareView(RetrieveAPIView):
-  pass
+class MealDiaryShareView(MealDiaryReadEditDeleteView):
+  @swagger_auto_schema(
+    manual_parameters=[openapi.Parameter(name='Authorization', in_=openapi.IN_HEADER, description='Access Token', type=openapi.TYPE_STRING)]
+  )
+  def get(self, request, *args, **kwargs):
+    instance = self.get_object()
+
+    if instance is not None:
+      instance.is_public = ~F('is_public')
+      instance.save()
+      instance.refresh_from_db()
+
+      if instance.is_public:
+        return Response(data={'message': '식단일기가 공개로 전환되었습니다.'}, status=status.HTTP_200_OK)
+      else:
+        return Response(data={'message': '식단일기가 비공개로 전환되었습니다.'}, status=status.HTTP_200_OK)
+    else:
+      raise NoMealDiaryFoundException(detail=('NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
+
+  @swagger_auto_schema(auto_schema=None)
+  def put(self, request, *args, **kwargs):
+    raise MethodNotAllowed(method='PUT', detail='GET 메서드 요청만 처리할 수 있습니다. (POST, PUT, PATCH, DELETE 요청 처리 불가)')
+
+  @swagger_auto_schema(auto_schema=None)
+  def patch(self, request, *args, **kwargs):
+    raise MethodNotAllowed(method='PATCH', detail='GET 메서드 요청만 처리할 수 있습니다. (POST, PUT, PATCH, DELETE 요청 처리 불가)')
+
+  @swagger_auto_schema(auto_schema=None)
+  def delete(self, request, *args, **kwargs):
+    raise MethodNotAllowed(method='DELETE', detail='GET 메서드 요청만 처리할 수 있습니다. (POST, PUT, PATCH, DELETE 요청 처리 불가)')
 
 
 '''
