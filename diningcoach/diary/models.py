@@ -1,5 +1,15 @@
+import os
 from django.db import models
+from diningcoach.storage import FileSystemOverwriteStorage
 from user.models import User
+
+
+##### 이미지 업로드 주소 #####
+def meal_image_path(instance, filename):
+  user_id = str(instance.meal.user.id)
+  meal_date = str(instance.meal.date)
+  meal_type = str(instance.meal.meal_type)
+  return os.path.join('diary', user_id, meal_date, meal_type, filename)
 
 
 ##### 추상클래스 #####
@@ -42,7 +52,7 @@ class MealDiary(TimestampModel):
   is_favourite = models.BooleanField(verbose_name='즐겨찾기', default=False)
   is_public    = models.BooleanField(verbose_name='공개 여부', default=False)
   is_deleted   = models.BooleanField(verbose_name='삭제 여부', default=False)
-  user         = models.ForeignKey(User, verbose_name='회원', on_delete=models.CASCADE)
+  user         = models.ForeignKey(User, verbose_name='회원', related_name='user_info', on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'meal_diary'
@@ -54,10 +64,10 @@ class MealDiary(TimestampModel):
 
 
 class MealImage(TimestampModel):
-  image_url   = models.TextField(verbose_name='이미지 주소')
+  image_url   = models.ImageField(verbose_name='이미지 주소', upload_to=meal_image_path, storage=FileSystemOverwriteStorage())
   device_info = models.TextField(verbose_name='기기 정보', blank=True, null=True)
   is_deleted  = models.BooleanField(verbose_name='삭제 여부', default=False)
-  meal        = models.ForeignKey(MealDiary, verbose_name='식사일기', on_delete=models.CASCADE)
+  meal        = models.ForeignKey(MealDiary, verbose_name='식사일기', related_name='meal_image', on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'meal_image'
@@ -79,7 +89,7 @@ class MealFood(models.Model):
   food_name = models.CharField(verbose_name='식품명', max_length=255)
   food_type = models.CharField(verbose_name='식품 종류', max_length=50, choices=FOOD_TYPES)
   portion   = models.FloatField(verbose_name='비율', blank=True, null=True, default=1.0)
-  meal      = models.ForeignKey(MealDiary, verbose_name='식사일기', on_delete=models.CASCADE)
+  meal      = models.ForeignKey(MealDiary, verbose_name='식사일기', related_name='meal_food', on_delete=models.CASCADE)
 
   class Meta:
     db_table = 'meal_food'
@@ -91,7 +101,7 @@ class MealFood(models.Model):
 
 
 class MealNutrition(NutritionModel):
-  meal = models.OneToOneField(MealDiary, verbose_name='식사일기', on_delete=models.CASCADE, primary_key=True)
+  meal = models.OneToOneField(MealDiary, verbose_name='식사일기', related_name='meal_nutrition', on_delete=models.CASCADE, primary_key=True)
 
   class Meta:
     db_table = 'meal_nutrition'

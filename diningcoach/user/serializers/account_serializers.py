@@ -1,10 +1,10 @@
-from django.contrib.auth import authenticate
 import re
 
 from user.models import User, UserProfile, UserHealth
 from user.exceptions import *
 
 from rest_framework import serializers
+from dj_rest_auth.serializers import PasswordResetConfirmSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
 
@@ -67,7 +67,32 @@ class UserSignUpSerializer(serializers.Serializer):
   '''
 
 
-class AuthUserSignUpSerializer(RegisterSerializer):
+class UserLoginSerializer(serializers.Serializer):
+  # This serializer is not used
+  pass
+
+  '''
+  email = serializers.EmailField(required=True)
+  password = serializers.CharField(required=True, max_length=255)
+
+  def validate(self, data):
+    # Validate email
+    email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    if not re.match(email_format, data['email']):
+      raise InvalidEmailFormatException(detail=('INVALID_EMAIL', '이메일 입력 형식이 올바르지 않습니다.'))
+    elif not User.objects.filter(email=data['email']).exists():
+      raise AccountNotExistsException(detail=('ACCOUNT_NOT_EXISTS', '해당 이메일로 등록된 계정이 존재하지 않습니다.'))
+
+    # Authenticate user
+    user = authenticate(email=data['email'], password=data['password'])
+    if user is None:
+      raise AuthenticationFailedException(detail=('AUTHENTICATION_FAILED', '비밀번호가 일치하지 않습니다.'))
+
+    return data
+  '''
+
+
+class AccountSignUpSerializer(RegisterSerializer):
   PLATFORM_TYPE = 'D'
   PLATFORM_ID = None
 
@@ -126,26 +151,15 @@ class AuthUserSignUpSerializer(RegisterSerializer):
     return user
 
 
-class UserLoginSerializer(serializers.Serializer):
-  # This serializer is not used
-  pass
+class AccountPasswordResetConfirmSerializer(PasswordResetConfirmSerializer):
+  uid = None
+  token = None
 
-  '''
-  email = serializers.EmailField(required=True)
-  password = serializers.CharField(required=True, max_length=255)
+  def validate(self, attrs):
+    uid = self.context['view'].kwargs['uidb64']
+    token = self.context['view'].kwargs['token']
 
-  def validate(self, data):
-    # Validate email
-    email_format = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
-    if not re.match(email_format, data['email']):
-      raise InvalidEmailFormatException(detail=('INVALID_EMAIL', '이메일 입력 형식이 올바르지 않습니다.'))
-    elif not User.objects.filter(email=data['email']).exists():
-      raise AccountNotExistsException(detail=('ACCOUNT_NOT_EXISTS', '해당 이메일로 등록된 계정이 존재하지 않습니다.'))
+    attrs['uid'] = uid
+    attrs['token'] = token
 
-    # Authenticate user
-    user = authenticate(email=data['email'], password=data['password'])
-    if user is None:
-      raise AuthenticationFailedException(detail=('AUTHENTICATION_FAILED', '비밀번호가 일치하지 않습니다.'))
-
-    return data
-  '''
+    return super().validate(attrs)

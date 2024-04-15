@@ -1,20 +1,12 @@
-from jwt import decode
-from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
-
-from django.conf import settings
-from django.shortcuts import render
-from django.contrib.auth.models import update_last_login
-
-from user.models import User, UserProfile, UserHealth
-from user.serializers.account_serializers import UserSignUpSerializer, UserLoginSerializer
-from user.exceptions import CreateDataFailedException
+from user.tasks import signup_complete_send_email
 
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+
+from dj_rest_auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
+from dj_rest_auth.registration.views import RegisterView
 
 
 # POST 'api/user/account/signup/' -> not used
@@ -133,7 +125,7 @@ class UserLogoutView(GenericAPIView):
 
 
 # GET 'api/user/account/token/refresh/' -> deprecated(not used)
-class CustomizedTokenRefreshView(APIView):
+class UserCustomizedTokenRefreshView(APIView):
   # This view is not used
   pass
 
@@ -177,3 +169,44 @@ class CustomizedTokenRefreshView(APIView):
 
     return response
   '''
+
+
+class AccountSignUpView(RegisterView):
+  def create(self, request, *args, **kwargs):
+    serializer = self.get_serializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user = self.perform_create(serializer)
+    headers = self.get_success_headers(serializer.data)
+    data = self.get_response_data(user)
+
+    if data:
+      # Celery asynchronous task
+      signup_complete_send_email.apply_async(kwargs={
+        'username': user.username,
+        'email': user.email,
+      })
+      response = Response(data, status=status.HTTP_201_CREATED, headers=headers)
+    else:
+      response = Response(status=status.HTTP_204_NO_CONTENT, headers=headers)
+
+    return response
+
+
+class AccountLoginView(LoginView):
+  pass
+
+
+class AccountLogoutView(LogoutView):
+  pass
+
+
+class AccountPasswordChangeView(PasswordChangeView):
+  pass
+
+
+class AccountPasswordResetView(PasswordResetView):
+  pass
+
+
+class AccountPasswordResetConfirmView(PasswordResetConfirmView):
+  pass

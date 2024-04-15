@@ -1,5 +1,13 @@
+import os
 from django.db import models
 from user.models import User
+
+
+##### 이미지 업로드 주소 #####
+def food_image_path(instance, filename):
+  food_type = instance.Meta.db_table
+  food_code = instance.food_code
+  return os.path.join('food', food_type, food_code, filename)
 
 
 ##### 추상클래스 #####
@@ -10,7 +18,7 @@ class FoodModel(models.Model):
   manufacturer   = models.CharField(verbose_name='지역/제조사', max_length=255, blank=True, null=True)
   category_main  = models.CharField(verbose_name='식품대분류', max_length=50)
   category_sub   = models.CharField(verbose_name='식품상세분류', max_length=50)
-  food_image     = models.TextField(verbose_name='식품 이미지', blank=True, null=True)
+  food_image     = models.ImageField(verbose_name='식품 이미지', upload_to=food_image_path, blank=True, null=True)
   allergy_info   = models.TextField(verbose_name='알레르기 정보', blank=True, null=True)
   storage_info   = models.TextField(verbose_name='보관방법 정보', blank=True, null=True)
 

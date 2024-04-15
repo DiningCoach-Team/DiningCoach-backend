@@ -59,6 +59,7 @@ INSTALLED_APPS = [
 
     # djangorestframework-simplejwt
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 
     # dj-rest-auth
     'dj_rest_auth',
@@ -160,6 +161,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+# Media files
+MEDIA_ROOT = BASE_DIR / 'media'
+
+MEDIA_URL = '/media/'
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -167,9 +175,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.User'
 
-SITE_ID = 1
+SITE_ID = 2
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # Django REST framework
 REST_FRAMEWORK = {
@@ -202,8 +215,10 @@ SIMPLE_JWT = {
 
 # dj-rest-auth
 REST_AUTH = {
-    # 'LOGIN_SERIALIZER': 'user.serializers.account_serializers.AuthUserLoginSerializer',
-    'REGISTER_SERIALIZER': 'user.serializers.account_serializers.AuthUserSignUpSerializer',
+    # 'LOGIN_SERIALIZER': 'user.serializers.account_serializers.AccountLoginSerializer',
+    'REGISTER_SERIALIZER': 'user.serializers.account_serializers.AccountSignUpSerializer',
+    # 'PASSWORD_RESET_SERIALIZER': 'user.serializers.account_serializers.AccountPasswordResetSerializer',
+    'PASSWORD_RESET_CONFIRM_SERIALIZER': 'user.serializers.account_serializers.AccountPasswordResetConfirmSerializer',
     'REGISTER_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
 
     'SESSION_LOGIN': False,
@@ -255,3 +270,13 @@ SWAGGER_SETTINGS = {
         'Bearer': []
     }],
 }
+
+# celery
+CELERY_ALWAYS_EAGER = True
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+CELERY_ACCEPT_CONTENT = ['json', 'pickle', 'application/json', 'application/text']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
