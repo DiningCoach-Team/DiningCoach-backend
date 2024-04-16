@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.db import transaction, IntegrityError
 from django.conf import settings
 
+from diningcoach.celery import app
 from food.models import ProcessedFood, FreshFood, CookedFood
 from diary.models import MealDiary, MealFood, MealNutrition
 from diary.exceptions import CreateDataFailedException, UpdateDataFailedException, DeleteDataFailedException
@@ -12,6 +13,7 @@ from diary.exceptions import CreateDataFailedException, UpdateDataFailedExceptio
 from rest_framework import serializers
 
 from celery import shared_task
+from celery.schedules import crontab
 
 
 class MealNutritionDefaultSerializer(serializers.ModelSerializer):
@@ -146,6 +148,7 @@ def delete_meal_nutrition(meal_nutrition_instance):
   meal_nutrition_instance.delete()
 
 
+@shared_task(bind=False)
 @transaction.atomic
 def delete_meal_diary():
   current_time = timezone.now()
@@ -176,3 +179,13 @@ def delete_meal_diary():
       meal_diary.delete()
   except IntegrityError:
     raise DeleteDataFailedException(detail=('DELETE_DATA_FAILED', '식단일기 데이터 영구 삭제에 실패하였습니다.'))
+
+
+# Celery Beat Scheduler
+app.conf.timezone = 'Asia/Seoul'
+app.conf.beat_schedule = {
+  'delete-meal-diary-once-a-day': {
+    'task': 'diary.tasks.delete_meal_diary',
+    'schedule': crontab(hour=6, minute=0),
+  },
+}
