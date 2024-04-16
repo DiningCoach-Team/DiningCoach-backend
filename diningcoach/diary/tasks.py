@@ -6,6 +6,8 @@ from diary.exceptions import CreateDataFailedException, UpdateDataFailedExceptio
 
 from rest_framework import serializers
 
+from celery import shared_task
+
 
 class MealNutritionDefaultSerializer(serializers.ModelSerializer):
   class Meta:
@@ -69,42 +71,42 @@ def generate_meal_nutrition(meal_food_list, meal_diary_id):
   return meal_nutrition_dict
 
 
+@shared_task(bind=False)
 @transaction.atomic
 def write_meal_nutrition(meal_diary_id):
   try:
-    with transaction.atomic():
-      meal_food_list = MealFood.objects.select_for_update().filter(
-        meal_id__exact=meal_diary_id
-      )
+    meal_food_list = MealFood.objects.select_for_update().filter(
+      meal_id__exact=meal_diary_id
+    )
 
-      meal_nutrition_data = generate_meal_nutrition(meal_food_list, meal_diary_id)
+    meal_nutrition_data = generate_meal_nutrition(meal_food_list, meal_diary_id)
 
-      meal_nutrition_serializer = MealNutritionDefaultSerializer(data=meal_nutrition_data)
-      meal_nutrition_serializer.is_valid(raise_exception=True)
-      meal_nutrition_serializer.save()
+    meal_nutrition_serializer = MealNutritionDefaultSerializer(data=meal_nutrition_data)
+    meal_nutrition_serializer.is_valid(raise_exception=True)
+    meal_nutrition_serializer.save()
   except IntegrityError:
     raise CreateDataFailedException(detail=('CREATE_DATA_FAILED', '식단일기 영양성분 데이터 생성에 실패하였습니다.'))
 
 
+@shared_task(bind=False)
 @transaction.atomic
 def edit_meal_nutrition(meal_diary_id):
   try:
-    with transaction.atomic():
-      meal_food_list = MealFood.objects.select_for_update().filter(
-        meal_id__exact=meal_diary_id
-      )
+    meal_food_list = MealFood.objects.select_for_update().filter(
+      meal_id__exact=meal_diary_id
+    )
 
-      meal_nutrition_data = generate_meal_nutrition(meal_food_list, meal_diary_id)
-      meal_nutrition_instance = MealNutrition.objects.select_for_update().filter(
-        meal_id__exact=meal_diary_id
-      )
-      if meal_nutrition_instance.exists():
-        meal_nutrition_instance = meal_nutrition_instance.get()
-      else:
-        meal_nutrition_instance = None
+    meal_nutrition_data = generate_meal_nutrition(meal_food_list, meal_diary_id)
+    meal_nutrition_instance = MealNutrition.objects.select_for_update().filter(
+      meal_id__exact=meal_diary_id
+    )
+    if meal_nutrition_instance.exists():
+      meal_nutrition_instance = meal_nutrition_instance.get()
+    else:
+      meal_nutrition_instance = None
 
-      meal_nutrition_serializer = MealNutritionDefaultSerializer(instance=meal_nutrition_instance, data=meal_nutrition_data)
-      meal_nutrition_serializer.is_valid(raise_exception=True)
-      meal_nutrition_serializer.save()
+    meal_nutrition_serializer = MealNutritionDefaultSerializer(instance=meal_nutrition_instance, data=meal_nutrition_data)
+    meal_nutrition_serializer.is_valid(raise_exception=True)
+    meal_nutrition_serializer.save()
   except IntegrityError:
     raise UpdateDataFailedException(detail=('UPDATE_DATA_FAILED', '식단일기 영양성분 데이터 수정에 실패하였습니다.'))
