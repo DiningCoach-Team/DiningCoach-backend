@@ -1,6 +1,6 @@
 # DiningCoach API server
 ### DiningCoach, for those who need special meal assistance
-<img src="images/DiningCoach App Overview.jpg" alt="DiningCoach App Overview Image" width="500" height="700">
+<img src="images/DiningCoach App Overview.jpg" alt="DiningCoach App Overview" width="500" height="700">
 
 
 ## 1. Project Intro
@@ -38,7 +38,7 @@
 
 
 ## 3. Tech Stacks used
-**(Note that tech stacks listed here are for backend only.)**
+**(Please note that tech stacks listed here are for backend only.)**
 - Languages
   - Python
 - Backend Framework
@@ -61,19 +61,23 @@
 
 ## 4. Project Architecture
 ### Overview Architecture
-- TBA
+- ***(Please note that we are currently working on it, and this architecture is not completed at the moment.)***
+
+<img src="images/DiningCoach Overview Architecture.jpg" alt="DiningCoach Overview Architecture" width="600" height="350">
 
 ### System Architecture
-- TBA
+- ***(Please note that we are currently working on it, and this architecture is not completed at the moment.)***
+
+<img src="images/DiningCoach System Architecture.jpg" alt="DiningCoach System Architecture" width="600" height="450">
 
 ### Server Architecture
-- TBA
+<img src="images/DiningCoach Server Architecture.jpg" alt="DiningCoach Server Architecture" width="600" height="250">
 
 
 ## 5. ERD
-<img src="images/DiningCoach ERD.jpg" alt="DiningCoach ERD" width="600" height="330">
-
 - For more details click here: [DiningCoach ERD_v3](https://www.erdcloud.com/p/ziMmq2mBhe2d4cCTr)
+
+<img src="images/DiningCoach ERD.jpg" alt="DiningCoach ERD" width="600" height="350">
 
 
 ## 6. API Docs
