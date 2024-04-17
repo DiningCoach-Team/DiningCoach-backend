@@ -1,4 +1,5 @@
 # DiningCoach API server
+#### Last updated : 17 Apr 2024
 ### DiningCoach, for those who need special meal assistance
 <img src="images/DiningCoach App Overview.jpg" alt="DiningCoach App Overview" width="1000" height="1400">
 
@@ -61,12 +62,14 @@
 
 ## 4. Project Architecture
 ### Overview Architecture
-- ***(Please note that we are currently working on it, and this architecture is not completed at the moment.)***
+- ***Please be advised that we are currently in progress, and Nginx, Gunicorn are not available at the moment.***
+- ***请注意，我们目前正在进行中，Nginx、Gunicorn 现在不可用。***
 
 <img src="images/DiningCoach Overview Architecture.jpg" alt="DiningCoach Overview Architecture" width="1200" height="700">
 
 ### System Architecture
-- ***(Please note that we are currently working on it, and this architecture is not completed at the moment.)***
+- ***Please be advised that we are currently in progress, and CI / CD (Docker, GitHub Actions) is not available at the moment.***
+- ***请注意，我们目前正在进行中，CI / CD (Docker、GitHub Actions) 现在不可用。***
 
 <img src="images/DiningCoach System Architecture.jpg" alt="DiningCoach System Architecture" width="1200" height="900">
 
@@ -81,7 +84,10 @@
 
 
 ## 6. API Docs
-🔥 [Swagger API Documentation](https://www.diningcoach.org/swagger/)
+🔥 [Swagger API Documentation v1](https://www.diningcoach.org/swagger/)
+
+<img src="images/DiningCoach API Swagger Docs 1.jpg" alt="DiningCoach API Swagger Docs 1" width="1200" height="800">
+<img src="images/DiningCoach API Swagger Docs 2.jpg" alt="DiningCoach API Swagger Docs 2" width="1200" height="800">
 
 
 ## 7. Technical achievements
