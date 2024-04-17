@@ -168,7 +168,6 @@ class MealDiaryWriteSerializer(MealDiaryWriteEditSerializer):
       meal_food_serializer.is_valid(raise_exception=True)
       meal_food_serializer.save()
 
-  @transaction.atomic
   def create(self, validated_data):
     user_id = self.context['request'].user.id
 
@@ -195,7 +194,10 @@ class MealDiaryWriteSerializer(MealDiaryWriteEditSerializer):
     except IntegrityError:
       raise CreateDataFailedException(detail=('CREATE_DATA_FAILED', '식단일기 등록에 실패하였습니다. 다시 시도해주세요.'))
 
-    write_meal_nutrition(meal_diary.id)
+    # Celery asynchronous task
+    write_meal_nutrition.apply_async(kwargs={
+      'meal_diary_id': meal_diary.id,
+    })
 
     return meal_diary
 
@@ -279,7 +281,6 @@ class MealDiaryEditSerializer(MealDiaryWriteEditSerializer):
       meal_food_serializer.is_valid(raise_exception=True)
       meal_food_serializer.save()
 
-  @transaction.atomic
   def update(self, instance, validated_data):
     # date = self.context['view'].kwargs['date']
     # meal_type = self.context['view'].kwargs['meal_type']
@@ -312,7 +313,10 @@ class MealDiaryEditSerializer(MealDiaryWriteEditSerializer):
     except IntegrityError:
       raise UpdateDataFailedException(detail=('UPDATE_DATA_FAILED', '식단일기 수정에 실패하였습니다. 다시 시도해주세요.'))
 
-    edit_meal_nutrition(meal_diary.id)
+    # Celery asynchronous task
+    edit_meal_nutrition.apply_async(kwargs={
+      'meal_diary_id': meal_diary.id,
+    })
 
     return meal_diary
 
