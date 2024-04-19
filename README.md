@@ -1,5 +1,5 @@
 # DiningCoach API server
-#### Last updated : 18 Apr 2024
+#### Last updated : 19 Apr 2024
 ### DiningCoach, for those who need special meal assistance
 <img src="images/DiningCoach App Overview.jpg" alt="DiningCoach App Overview" width="1000" height="1400">
 
@@ -62,12 +62,12 @@
 
 ## 4. Project Architecture
 ### Overview Architecture
-- ***Please be advised that we are currently in progress, and `Nginx`, `Gunicorn` are not available at the moment. (请注意，我们目前正在进行中，`Nginx`、`Gunicorn` 现在不可用。)***
+- ***Please be advised that we are currently in progress, and `Nginx`, `Gunicorn` are not available at the moment.***
 
 <img src="images/DiningCoach Overview Architecture.jpg" alt="DiningCoach Overview Architecture" width="1200" height="700">
 
 ### System Architecture
-- ***Please be advised that we are currently in progress, and `GitHub Actions` is not available at the moment. (请注意，我们目前正在进行中，`GitHub Actions` 现在不可用。)***
+- ***Please be advised that we are currently in progress, and `GitHub Actions` is not available at the moment.***
 
 <img src="images/DiningCoach System Architecture.jpg" alt="DiningCoach System Architecture" width="1200" height="900">
 
@@ -120,7 +120,7 @@
   - Similarly, when a new meal diary is created or updated, its nutrition data, which is the total sum of the eaten food, has to be generated or regenerated. However, this is a heavily time-consuming process since all the nutrition data for each food should be retrieved from the table before adding them up. It took an average of 4 seconds for every meal diary to respond to create or update requests. We thought this should be done much faster for a better user experience.
 - **Solution (How we solved)**
   - We thought this issue could be solved if the user could get a response instantly, but at the same time, the email-sending task should still be processed internally. We figured out that this can be done by implementing Celery, which is a famous Python library for dealing with asynchronous tasks.
-  - To set up Celery, we first configured Redis, a widely used in-memory DB, to utilise it as our message broker. A message broker works as a task queue where it receives the message from the producer(Celery Worker) and stores the message until it can be sent to the consumer(Django Server). The main reason why we chose Redis as our message broker here is that we were already planning to use Redis to solve concurrency issues, and it would be better just to use the same database instead of a different one.
+  - To set up Celery, we first configured Redis, a widely used in-memory DB, to utilise it as our message broker. A message broker works as a task queue where it receives the message from the producer(DiningCoach Server) and stores the message until it can be sent to the consumer(Celery Worker). The main reason why we chose Redis as our message broker here is that we were already planning to use Redis to solve concurrency issues, and it would be better just to use the same database instead of a different one.
   - We separated all email-sending tasks to Celery Worker shared tasks, so that our server would not be bothered with processing requests and responses. Tasks to generate or regenerate nutrition data when a user creates or updates a meal diary have been separated in the same way.
   - Our business logic also has a task to permanently delete meal diaries in the trash bin after 30 days to save up memory space. Since this must be done at a scheduled time regularly, we have utilised the Celery Beat scheduler to execute this task every morning at 6 AM.
   - However, using celery can potentially create bottlenecks, which can make all the asynchronous tasks to be executed too slowly. If we encounter these issues, we expect to resolve them by customising some of the configuration settings, and this is something we should dig deeper into later.
