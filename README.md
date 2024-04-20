@@ -1,7 +1,7 @@
 # DiningCoach API server
-#### Last updated : 19 Apr 2024
+#### Last updated : 20 Apr 2024
 ### DiningCoach, for those who need special meal assistance
-<img src="images/DiningCoach App Overview.jpg" alt="DiningCoach App Overview" width="1000" height="1400">
+<img src="images/DiningCoach App Overview.jpg" alt="DiningCoach App Overview (1000x1400)" width="800" height="1120">
 
 
 ## 1. Project Intro
@@ -64,28 +64,28 @@
 ### Overview Architecture
 - ***Please be advised that we are currently in progress, and `Nginx`, `Gunicorn` are not available at the moment.***
 
-<img src="images/DiningCoach Overview Architecture.jpg" alt="DiningCoach Overview Architecture" width="1200" height="700">
+<img src="images/DiningCoach Overview Architecture.jpg" alt="DiningCoach Overview Architecture (1200x700)" width="960" height="560">
 
 ### System Architecture
 - ***Please be advised that we are currently in progress, and `GitHub Actions` is not available at the moment.***
 
-<img src="images/DiningCoach System Architecture.jpg" alt="DiningCoach System Architecture" width="1200" height="900">
+<img src="images/DiningCoach System Architecture.jpg" alt="DiningCoach System Architecture (1200x900)" width="960" height="720">
 
 ### Server Architecture
-<img src="images/DiningCoach Server Architecture.jpg" alt="DiningCoach Server Architecture" width="1200" height="500">
+<img src="images/DiningCoach Server Architecture.jpg" alt="DiningCoach Server Architecture (1200x500)" width="960" height="400">
 
 
 ## 5. ERD
 - For more details click here: [DiningCoach ERD_v3](https://www.erdcloud.com/p/ziMmq2mBhe2d4cCTr)
 
-<img src="images/DiningCoach ERD.jpg" alt="DiningCoach ERD" width="1200" height="700">
+<img src="images/DiningCoach ERD.jpg" alt="DiningCoach ERD (1200x700)" width="960" height="560">
 
 
 ## 6. API Docs
 🔥 [Swagger API Documentation v1](https://www.diningcoach.org/swagger/)
 
-<img src="images/DiningCoach API Swagger Docs 1.jpg" alt="DiningCoach API Swagger Docs 1" width="1200" height="800">
-<img src="images/DiningCoach API Swagger Docs 2.jpg" alt="DiningCoach API Swagger Docs 2" width="1200" height="800">
+<img src="images/DiningCoach API Swagger Docs 1.jpg" alt="DiningCoach API Swagger Docs 1 (1200x800)" width="960" height="640">
+<img src="images/DiningCoach API Swagger Docs 2.jpg" alt="DiningCoach API Swagger Docs 2 (1200x800)" width="960" height="640">
 
 
 ## 7. Technical achievements
