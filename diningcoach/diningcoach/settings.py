@@ -37,6 +37,10 @@ ALLOWED_HOSTS = [
   '127.0.0.1',
 ]
 
+INTERNAL_IPS = [
+  '127.0.0.1',
+]
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -50,8 +54,8 @@ INSTALLED_APPS = [
     # django-filter
     'django_filters',
 
-    # drf-yasg
-    'drf_yasg',
+    # django-debug-toolbar
+    'debug_toolbar',
 
     # djangorestframework
     'rest_framework',
@@ -70,6 +74,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
+    # drf-yasg
+    'drf_yasg',
+
     # apps
     'user',
     'food',
@@ -86,6 +93,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
 
