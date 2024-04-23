@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient, URLPatternsTestCase
 
 
-class UserTest(APITestCase):
+class UserAPITestCase(APITestCase):
   user1_instance = None
   user1_setup_data = {
     'username': 'test1',
