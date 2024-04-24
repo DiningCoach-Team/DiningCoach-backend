@@ -1,5 +1,5 @@
-# DiningCoach API server
-#### Last updated : 20 Apr 2024
+# DiningCoach API Server
+#### Last updated : 24 Apr 2024
 ### DiningCoach, for those who need special meal assistance
 <img src="images/DiningCoach App Overview.jpg" alt="DiningCoach App Overview (1000x1400)" width="800" height="1120">
 
@@ -88,7 +88,7 @@
 <img src="images/DiningCoach API Swagger Docs 2.jpg" alt="DiningCoach API Swagger Docs 2 (1200x800)" width="960" height="640">
 
 
-## 7. Technical achievements
+## 7. Technical Achievements
 ### (1) Improved user experience through the PostgreSQL Database and Django ORM optimisation
 - **Problem (What issues we faced)**
   - When we measured the latency, which is the total delay to get a response when a user sends a request, our Food Search & Scan API took an average of 4 seconds. Especially `/food/search/processed` API sometimes even took longer than 5 seconds as there were over 700,000 number of data. Since we believe that this largely affects our user experience, we tried to make this as fast as possible. But at the same time, maintaining the accuracy of the search results was our highest priority.
@@ -126,3 +126,18 @@
   - However, using celery can potentially create bottlenecks, which can make all the asynchronous tasks to be executed too slowly. If we encounter these issues, we expect to resolve them by customising some of the configuration settings, and this is something we should dig deeper into later.
 - **Result (What achievements we made)**
   - Our User Sign Up & Password Reset API, which originally took over 8 seconds, has finally become less than a second (943 ms). Additionally, our Meal Diary Write & Edit API, which originally took over 4 seconds, has also now become less than a second (928 ms).
+
+
+## 8. Performance Metrics
+- We have tested our server under the following circumstances:
+  - Number of total users to simulate: 100
+  - Spawn rate: 2
+  - **Meaning -> Ramping to 100 users at a rate of 2.00 per second**
+- We have tested our server for the following two User APIs:
+  - POST `/user/account/login/`: 60.0%
+  - POST `/user/account/signup/`: 40.0%
+  - **Total Ratio -> login:signup = 3:2**
+- We can see that our server responds in an average of 0.9 seconds, which is a fairly reasonable amount of time, even when there are lots of users trying to sign in and sign up at the same time.
+- The failures shown in the chart are ***400 Client Error: Bad Request*** and are intentionally generated for testing purposes.
+
+<img src="images/DiningCoach Server Performance Metrics.jpg" alt="DiningCoach Server Performance Metrics (1500x900)" width="900" height="540">
