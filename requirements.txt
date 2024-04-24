@@ -37,6 +37,7 @@ Flask-Login==0.6.3
 gevent==24.2.1
 geventhttpclient==2.2.1
 greenlet==3.0.3
+gunicorn==22.0.0
 idna==3.4
 inflection==0.5.1
 ipykernel==6.29.3
