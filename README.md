@@ -38,7 +38,7 @@
 
 
 ## 3. Tech Stacks used
-**(Please note that tech stacks listed here are for backend only.)**
+***Please note that tech stacks listed here are for backend only.***
 - Languages
   - Python
 - Backend Framework
@@ -52,11 +52,15 @@
   - PostgreSQL
 - Infra
   - AWS(EC2, RDS)
-  - Docker, Docker Compose ***(Currently working on it!)***
+  - Docker, Docker Compose
 - CI/CD
   - GitHub Actions ***(Currently working on it!)***
 - Design
   - Figma
+
+**Listed below are some of the important factors that we have taken into consideration during development.**
+
+<img src="images/DiningCoach Server Development Checklist.jpg" alt="DiningCoach Server Development Checklist" width="800" height="400">
 
 
 ## 4. Project Architecture
