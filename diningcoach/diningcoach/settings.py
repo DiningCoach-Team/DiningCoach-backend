@@ -31,9 +31,14 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
+  '127.0.0.1',
+  '43.202.10.196',
+]
+
+INTERNAL_IPS = [
   '127.0.0.1',
 ]
 
@@ -50,8 +55,8 @@ INSTALLED_APPS = [
     # django-filter
     'django_filters',
 
-    # drf-yasg
-    'drf_yasg',
+    # django-debug-toolbar
+    'debug_toolbar',
 
     # djangorestframework
     'rest_framework',
@@ -70,6 +75,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
+    # drf-yasg
+    'drf_yasg',
+
     # apps
     'user',
     'food',
@@ -87,6 +95,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'allauth.account.middleware.AccountMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'diningcoach.middleware.MetricMiddleware',
 ]
 
 ROOT_URLCONF = 'diningcoach.urls'
@@ -158,8 +168,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATIC_ROOT = BASE_DIR / 'static'
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 
 # Media files
@@ -280,3 +291,26 @@ CELERY_ACCEPT_CONTENT = ['json', 'pickle', 'application/json', 'application/text
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
