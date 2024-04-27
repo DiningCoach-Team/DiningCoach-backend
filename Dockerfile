@@ -5,7 +5,7 @@ COPY diningcoach /diningcoach
 COPY /home/ubuntu/.env /diningcoach
 RUN pip install --upgrade pip \
   && pip install -r requirements.txt
-
-WORKDIR /diningcoach
-EXPOSE 8000
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "diningcoach.wsgi:application"]
+# Executed by Docker Compose
+# WORKDIR /diningcoach
+# EXPOSE 8000
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "diningcoach.wsgi:application"]
