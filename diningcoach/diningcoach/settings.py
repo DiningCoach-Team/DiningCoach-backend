@@ -36,6 +36,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
   '127.0.0.1',
   '43.202.10.196',
+  'diningcoach_server',
 ]
 
 INTERNAL_IPS = [

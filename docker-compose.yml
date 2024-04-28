@@ -1,19 +1,20 @@
-version: "3"
-
 services:
   django_app:
     container_name: diningcoach-server
+    image: django_app
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    # expose:
+    #   - "8000"
     volumes:
       - ./diningcoach:/diningcoach
     working_dir: /diningcoach
     command: gunicorn --bind 0.0.0.0:8000 diningcoach.wsgi:application
-#   expose:
-#     - "8000"
+    env_file:
+      - ./diningcoach/.env
     depends_on:
       - redis
 
@@ -24,6 +25,8 @@ services:
       - ./diningcoach:/diningcoach
     working_dir: /diningcoach
     command: celery -A diningcoach worker -l info
+    environment:
+      - C_FORCE_ROOT=true
     depends_on:
       - django_app
       - redis
