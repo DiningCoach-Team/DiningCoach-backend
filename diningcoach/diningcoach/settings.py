@@ -198,7 +198,7 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # Django REST framework
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'food.utils.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'diningcoach.utils.custom_exception_handler',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
