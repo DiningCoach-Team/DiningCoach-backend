@@ -43,11 +43,11 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
     date_input = self.kwargs['date']
     date_format = r'\b(19\d\d|20\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b'
     if not re.match(date_format, date_input):
-      raise InvalidInputFormatException(detail=('INVALID_INPUT_FORMAT', '날짜 형식은 YYYY-MM-DD이 되어야 합니다.'))
+      raise InvalidInputFormatException(detail=('D1', 'INVALID_INPUT_FORMAT', '날짜 형식은 YYYY-MM-DD이 되어야 합니다.'))
 
     meal_type_input = self.kwargs['meal_type']
     if meal_type_input not in ['B', 'L', 'D', 'S']:
-      raise InvalidInputFormatException(detail=('INVALID_INPUT_FORMAT', '식사 종류는 B,L,D,S 중에 하나가 되어야 합니다.'))
+      raise InvalidInputFormatException(detail=('D1', 'INVALID_INPUT_FORMAT', '식사 종류는 B,L,D,S 중에 하나가 되어야 합니다.'))
 
   def get_queryset(self):
     self.validate_input()
@@ -64,9 +64,9 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
     )
 
     if not meal_diary.exists():
-      raise NoMealDiaryFoundException(detail=('NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
+      raise NoMealDiaryFoundException(detail=('D8', 'NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
     elif meal_diary.count() > 1:
-      raise MultipleMealDiaryFoundException(detail=('MULTIPLE_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 2개 이상 존재합니다.'))
+      raise MultipleMealDiaryFoundException(detail=('D9', 'MULTIPLE_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 2개 이상 존재합니다.'))
 
     return meal_diary
 
@@ -107,7 +107,7 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
       else:
         return Response(serializer.data)
     else:
-      raise NoMealDiaryFoundException(detail=('NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
+      raise NoMealDiaryFoundException(detail=('D8', 'NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
 
 
 # 'api/diary/meal/<str:date>/<str:meal_type>/share/' -> GET
@@ -128,7 +128,7 @@ class MealDiaryShareView(MealDiaryReadEditDeleteView):
       else:
         return Response(data={'message': '식단일기가 비공개로 전환되었습니다.'}, status=status.HTTP_200_OK)
     else:
-      raise NoMealDiaryFoundException(detail=('NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
+      raise NoMealDiaryFoundException(detail=('D8', 'NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
 
   @swagger_auto_schema(auto_schema=None)
   def put(self, request, *args, **kwargs):

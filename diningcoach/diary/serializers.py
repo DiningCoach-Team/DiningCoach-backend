@@ -132,7 +132,7 @@ class MealDiaryWriteSerializer(MealDiaryWriteEditSerializer):
     if request and hasattr(request, 'user'):
       user_id = request.user.id
     else:
-      raise UserInfoNotProvidedException(detail=('USER_NOT_PROVIDED', '유저 정보를 불러올 수 없습니다.'))
+      raise UserInfoNotProvidedException(detail=('D3', 'USER_NOT_PROVIDED', '유저 정보를 불러올 수 없습니다.'))
 
     meal_diary = MealDiary.objects.filter(
       date__exact=attrs['date'],
@@ -141,12 +141,12 @@ class MealDiaryWriteSerializer(MealDiaryWriteEditSerializer):
       user_id__exact=user_id,
     )
     if meal_diary.exists():
-      raise DuplicateMealDiaryException(detail=('DUPLICATE_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 이미 존재합니다.'))
+      raise DuplicateMealDiaryException(detail=('D7', 'DUPLICATE_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 이미 존재합니다.'))
     return super().validate(attrs)
 
   def write_meal_image(self, meal_image_list, meal_diary_id):
     if len(meal_image_list) > 5:
-      raise InvalidNumArgsException(detail=('ABOVE_MAX_NUM', '한 식단일기에 등록 가능한 이미지의 개수는 최대 5개입니다.'))
+      raise InvalidNumArgsException(detail=('D2', 'ABOVE_MAX_NUM', '한 식단일기에 등록 가능한 이미지의 개수는 최대 5개입니다.'))
 
     for meal_image_data in meal_image_list:
       # meal_image_serializer = self.fields['meal_image']
@@ -157,9 +157,9 @@ class MealDiaryWriteSerializer(MealDiaryWriteEditSerializer):
 
   def write_meal_food(self, meal_food_list, meal_diary_id):
     if len(meal_food_list) > 10:
-      raise InvalidNumArgsException(detail=('ABOVE_MAX_NUM', '한 식단일기에 등록 가능한 음식의 개수는 최대 10개입니다.'))
+      raise InvalidNumArgsException(detail=('D2', 'ABOVE_MAX_NUM', '한 식단일기에 등록 가능한 음식의 개수는 최대 10개입니다.'))
     elif len(meal_food_list) < 1:
-      raise InvalidNumArgsException(detail=('BELOW_MIN_NUM', '한 식단일기에 음식은 최소 1개 이상 등록해야 합니다.'))
+      raise InvalidNumArgsException(detail=('D2', 'BELOW_MIN_NUM', '한 식단일기에 음식은 최소 1개 이상 등록해야 합니다.'))
 
     for meal_food_data in meal_food_list:
       # meal_food_serializer = self.fields['meal_food']
@@ -192,7 +192,7 @@ class MealDiaryWriteSerializer(MealDiaryWriteEditSerializer):
         if ('meal_food' in validated_data) and (validated_data['meal_food'] is not None):
           self.write_meal_food(validated_data['meal_food'], meal_diary.id)
     except IntegrityError:
-      raise CreateDataFailedException(detail=('CREATE_DATA_FAILED', '식단일기 등록에 실패하였습니다. 다시 시도해주세요.'))
+      raise CreateDataFailedException(detail=('D4', 'CREATE_DATA_FAILED', '식단일기 등록에 실패하였습니다. 다시 시도해주세요.'))
 
     # Celery asynchronous task
     write_meal_nutrition.apply_async(kwargs={
@@ -209,7 +209,7 @@ class MealDiaryEditSerializer(MealDiaryWriteEditSerializer):
 
   def edit_meal_image(self, old_list, new_list, meal_diary_id):
     if len(new_list) > 5:
-      raise InvalidNumArgsException(detail=('ABOVE_MAX_NUM', '한 식단일기에 등록 가능한 이미지의 개수는 최대 5개입니다.'))
+      raise InvalidNumArgsException(detail=('D2', 'ABOVE_MAX_NUM', '한 식단일기에 등록 가능한 이미지의 개수는 최대 5개입니다.'))
 
     # Convert data to list
     old_list = list(old_list)
@@ -249,9 +249,9 @@ class MealDiaryEditSerializer(MealDiaryWriteEditSerializer):
 
   def edit_meal_food(self, old_list, new_list, meal_diary_id):
     if len(new_list) > 10:
-      raise InvalidNumArgsException(detail=('ABOVE_MAX_NUM', '한 식단일기에 등록 가능한 음식의 개수는 최대 10개입니다.'))
+      raise InvalidNumArgsException(detail=('D2', 'ABOVE_MAX_NUM', '한 식단일기에 등록 가능한 음식의 개수는 최대 10개입니다.'))
     elif len(new_list) < 1:
-      raise InvalidNumArgsException(detail=('BELOW_MIN_NUM', '한 식단일기에 음식은 최소 1개 이상 등록해야 합니다.'))
+      raise InvalidNumArgsException(detail=('D2', 'BELOW_MIN_NUM', '한 식단일기에 음식은 최소 1개 이상 등록해야 합니다.'))
 
     # Convert data to list
     old_list = list(old_list)
@@ -311,7 +311,7 @@ class MealDiaryEditSerializer(MealDiaryWriteEditSerializer):
         if ('meal_food' in validated_data) and (validated_data['meal_food'] is not None):
           self.edit_meal_food(meal_diary.meal_food.all(), validated_data['meal_food'], meal_diary.id)
     except IntegrityError:
-      raise UpdateDataFailedException(detail=('UPDATE_DATA_FAILED', '식단일기 수정에 실패하였습니다. 다시 시도해주세요.'))
+      raise UpdateDataFailedException(detail=('D5', 'UPDATE_DATA_FAILED', '식단일기 수정에 실패하였습니다. 다시 시도해주세요.'))
 
     # Celery asynchronous task
     edit_meal_nutrition.apply_async(kwargs={
