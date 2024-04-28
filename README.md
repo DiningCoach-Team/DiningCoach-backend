@@ -1,5 +1,5 @@
 # DiningCoach API Server
-#### Last updated : 24 Apr 2024
+#### Last updated : 28 Apr 2024
 ### DiningCoach, for those who need special meal assistance
 <img src="images/DiningCoach App Overview.jpg" alt="DiningCoach App Overview (1000x1400)" width="800" height="1120">
 
@@ -66,8 +66,6 @@
 
 ## 4. Project Architecture
 ### Overview Architecture
-- ***Please be advised that we are currently in progress, and `Nginx`, `Gunicorn` are not available at the moment.***
-
 <img src="images/DiningCoach Overview Architecture.jpg" alt="DiningCoach Overview Architecture (1200x700)" width="960" height="560">
 
 ### System Architecture
