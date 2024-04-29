@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.core.exceptions import ValidationError
 
 from food.models import ProcessedFood, FreshFood, CookedFood
+from food.serializers.params_serializers import FoodScanSerializer, FoodSearchSerializer, FoodDetailSerializer
 from food.serializers.processed_serializers import ProcessedFoodSimpleSerializer, ProcessedFoodDetailSerializer
 from food.serializers.fresh_serializers import FreshFoodSimpleSerializer, FreshFoodDetailSerializer
 from food.serializers.cooked_serializers import CookedFoodSimpleSerializer, CookedFoodDetailSerializer
@@ -11,7 +12,6 @@ from food.filters import ProcessedFoodFilter, FreshFoodFilter, CookedFoodFilter
 
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
-from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -19,21 +19,18 @@ from django_filters.rest_framework import DjangoFilterBackend
 class FoodScanView(ListAPIView):
   serializer_class = ProcessedFoodDetailSerializer
 
-  def validate_input(self):
-    barcode_no = self.kwargs['barcode_no']
-    if not barcode_no.isnumeric():
-      raise InvalidInputFormatException(detail=('F1', 'INVALID_FORMAT', '스캔하신 바코드의 입력 형식이 올바르지 않습니다.'))
-
-  def get_queryset(self):
-    self.validate_input()
-
-    return ProcessedFood.objects.filter(barcode_no=self.kwargs['barcode_no'])
+  def get_queryset(self, barcode_no):
+    return ProcessedFood.objects.filter(barcode_no=barcode_no)
 
   def list(self, request, *args, **kwargs):
-    queryset = self.filter_queryset(self.get_queryset())
+    barcode_no = self.kwargs['barcode_no']
 
+    params_serializer = FoodScanSerializer(data={'barcode_no': barcode_no})
+    params_serializer.is_valid(raise_exception=True)
+
+    queryset = self.filter_queryset(self.get_queryset(barcode_no))
     if not queryset.exists():
-      raise NoResultFoundException(detail=('F2', 'NO_RESULT', '스캔하신 바코드에 해당하는 상품이 존재하지 않습니다.'))
+      raise NoResultFoundException(detail=('F2', 'NO_RESULT', '스캔하신 바코드에 해당하는 식품이 존재하지 않습니다.'))
 
     serializer = self.get_serializer(queryset, many=True)
     return Response(serializer.data)
@@ -54,17 +51,11 @@ class FoodScanView(ListAPIView):
 class FoodSearchView(ListAPIView):
   filter_backends = [DjangoFilterBackend]
 
-  def validate_input(self):
-    correct_query_params = ['id', 'code', 'name', 'cate_main', 'cate_sub']
-    input_query_params = list(self.request.query_params.keys())
-    if not all(key in correct_query_params for key in input_query_params):
-      raise InvalidInputFormatException(detail=('F1', 'INVALID_FORMAT', '입력하신 검색 조건 인자가 올바르지 않습니다.'))
-
   def list(self, request, *args, **kwargs):
-    self.validate_input()
+    params_serializer = FoodSearchSerializer(data=request.query_params)
+    params_serializer.is_valid(raise_exception=True)
 
     queryset = self.filter_queryset(self.get_queryset())
-
     if not queryset.exists():
       raise NoResultFoundException(detail=('F2', 'NO_RESULT', '검색하신 조건에 해당하는 식품이 존재하지 않습니다.'))
 
@@ -97,15 +88,15 @@ class CookedFoodSearchView(FoodSearchView):
 class FoodDetailView(RetrieveAPIView):
   lookup_field = 'id'
 
-  def validate_input(self):
-    food_id = self.kwargs['id']
-    if not food_id.isnumeric():
-      raise InvalidInputFormatException(detail=('F1', 'INVALID_FORMAT', '입력하신 식품 ID 형식이 올바르지 않습니다.'))
-
   def retrieve(self, request, *args, **kwargs):
-    self.validate_input()
+    food_id = self.kwargs['id']
 
-    return super().retrieve(request, *args, **kwargs)
+    params_serializer = FoodDetailSerializer(data={'food_id': food_id})
+    params_serializer.is_valid(raise_exception=True)
+
+    instance = self.get_object()
+    serializer = self.get_serializer(instance)
+    return Response(serializer.data)
 
 
 # api/food/detail/processed/<str:id>/

@@ -2,7 +2,6 @@ from rest_framework import status
 from rest_framework.exceptions import APIException
 
 
-# class BaseCustomException(APIException):
 class FoodCustomException(APIException):
   detail = None
   status_code = None
@@ -19,5 +18,5 @@ class InvalidInputFormatException(FoodCustomException):
 
 
 class NoResultFoundException(FoodCustomException):
-  def __init__(self, detail=('F2', 'NO_RESULT', '찾으시는 내용이 없습니다.'), code=status.HTTP_204_NO_CONTENT):
+  def __init__(self, detail=('F2', 'NO_RESULT', '찾으시는 내용이 없습니다.'), code=status.HTTP_404_NOT_FOUND):
     super().__init__(detail, code)
