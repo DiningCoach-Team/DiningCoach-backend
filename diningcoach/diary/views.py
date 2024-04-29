@@ -32,7 +32,6 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
   serializer_classes = {
     'GET': MealDiaryReadSerializer,
     'PUT': MealDiaryEditSerializer,
-    'DELETE': MealDiaryDeleteSerializer,
   }
 
   serializer_class = MealDiaryDefaultSerializer
@@ -94,20 +93,13 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
     manual_parameters=[openapi.Parameter(name='Authorization', in_=openapi.IN_HEADER, description='Access Token', type=openapi.TYPE_STRING)]
   )
   def delete(self, request, *args, **kwargs):
-    self.serializer_class = self.serializer_classes['DELETE']
-
     instance = self.get_object()
-    serializer = self.get_serializer(instance)
 
     if instance is not None:
-      instance.is_deleted = ~F('is_deleted')
+      instance.is_deleted = True
       instance.save()
-      instance.refresh_from_db()
 
-      if instance.is_deleted:
-        return Response(data={'message': '식단일기가 성공적으로 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
-      else:
-        return Response(serializer.data)
+      return Response(data={'message': '식단일기가 성공적으로 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
     else:
       raise NoMealDiaryFoundException(detail=('D8', 'NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
 
