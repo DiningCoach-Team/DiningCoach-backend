@@ -4,10 +4,11 @@ from django.shortcuts import render
 from django.db.models import Prefetch, F
 
 from diary.models import MealDiary, MealImage, MealFood, MealNutrition
-from diary.serializers import (
-  MealDiaryDefaultSerializer,
-  MealDiaryReadSerializer, MealDiaryWriteSerializer, MealDiaryEditSerializer, MealDiaryDeleteSerializer,
-)
+from diary.serializers.base_serializers import MealDiaryDefaultSerializer
+from diary.serializers.read_serializers import MealDiaryReadSerializer
+from diary.serializers.write_serializers import MealDiaryWriteSerializer
+from diary.serializers.edit_serializers import MealDiaryEditSerializer
+from diary.serializers.delete_serializers import MealDiaryDeleteSerializer
 from diary.exceptions import InvalidInputFormatException, NoMealDiaryFoundException, MultipleMealDiaryFoundException
 
 from rest_framework import status
