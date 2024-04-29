@@ -4,8 +4,8 @@ from rest_framework import serializers
 
 ##### Params Serializer #####
 class MealDiaryReadEditDeleteSerializer(serializers.Serializer):
-  date = serializers.CharField(required=False)
-  meal_type = serializers.CharField(required=False)
+  date = serializers.CharField(required=True)
+  meal_type = serializers.CharField(required=True)
 
   def validate_date(self, value):
     date_format = r'\b(19\d\d|20\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b'

@@ -1,9 +1,8 @@
-import re
-
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Prefetch, F
 
 from diary.models import MealDiary, MealImage, MealFood, MealNutrition
+from diary.serializers.params_serializers import MealDiaryReadEditDeleteSerializer
 from diary.serializers.base_serializers import MealDiaryDefaultSerializer
 from diary.serializers.read_serializers import MealDiaryReadSerializer
 from diary.serializers.write_serializers import MealDiaryWriteSerializer
@@ -40,20 +39,7 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
   permission_classes = [IsAuthenticated]
   lookup_field = 'user_id'
 
-  def validate_input(self):
-    date_input = self.kwargs['date']
-    date_format = r'\b(19\d\d|20\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b'
-    if not re.match(date_format, date_input):
-      raise InvalidInputFormatException(detail=('D1', 'INVALID_INPUT_FORMAT', '날짜 형식은 YYYY-MM-DD이 되어야 합니다.'))
-
-    meal_type_input = self.kwargs['meal_type']
-    if meal_type_input not in ['B', 'L', 'D', 'S']:
-      raise InvalidInputFormatException(detail=('D1', 'INVALID_INPUT_FORMAT', '식사 종류는 B,L,D,S 중에 하나가 되어야 합니다.'))
-
   def get_queryset(self):
-    self.validate_input()
-    self.kwargs[self.lookup_field] = self.request.user.id
-
     meal_diary = MealDiary.objects.filter(
       date__exact=self.kwargs['date'],
       meal_type__exact=self.kwargs['meal_type'],
@@ -63,13 +49,28 @@ class MealDiaryReadEditDeleteView(RetrieveUpdateDestroyAPIView):
       Prefetch('meal_food', queryset=MealFood.objects.all()),
       Prefetch('meal_nutrition', queryset=MealNutrition.objects.all()),
     )
+    return meal_diary
 
-    if not meal_diary.exists():
+  def get_object(self):
+    self.kwargs[self.lookup_field] = self.request.user.id
+    date_input = self.kwargs['date']
+    meal_type_input = self.kwargs['meal_type']
+
+    params_serializer = MealDiaryReadEditDeleteSerializer(data={'date': date_input, 'meal_type': meal_type_input})
+    params_serializer.is_valid(raise_exception=True)
+
+    queryset = self.filter_queryset(self.get_queryset())
+    if not queryset.exists():
       raise NoMealDiaryFoundException(detail=('D8', 'NO_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 존재하지 않습니다.'))
-    elif meal_diary.count() > 1:
+    elif queryset.count() > 1:
       raise MultipleMealDiaryFoundException(detail=('D9', 'MULTIPLE_MEAL_DIARY', '요청하신 날짜의 해당 식사에 대한 식단일기가 2개 이상 존재합니다.'))
 
-    return meal_diary
+    filter_kwargs = {self.lookup_field: self.kwargs[self.lookup_field]}
+    obj = get_object_or_404(queryset, **filter_kwargs)
+
+    self.check_object_permissions(self.request, obj)
+
+    return obj
 
   @swagger_auto_schema(
     manual_parameters=[openapi.Parameter(name='Authorization', in_=openapi.IN_HEADER, description='Access Token', type=openapi.TYPE_STRING)]

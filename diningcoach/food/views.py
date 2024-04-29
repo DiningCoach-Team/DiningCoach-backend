@@ -20,7 +20,8 @@ class FoodScanView(ListAPIView):
   serializer_class = ProcessedFoodDetailSerializer
 
   def get_queryset(self, barcode_no):
-    return ProcessedFood.objects.filter(barcode_no=barcode_no)
+    food_list = ProcessedFood.objects.filter(barcode_no=barcode_no)
+    return food_list
 
   def list(self, request, *args, **kwargs):
     barcode_no = self.kwargs['barcode_no']
