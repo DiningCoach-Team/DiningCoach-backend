@@ -1,5 +1,6 @@
 import os
 from django.db import models
+from django.contrib.postgres.indexes import GinIndex
 from user.models import User
 
 
@@ -60,7 +61,7 @@ class CustomizedFood(FoodModel):
     verbose_name_plural = verbose_name
     indexes = [
       models.Index(fields=['food_code'], name='customized_food_code_index'),
-      models.Index(fields=['food_name'], name='customized_food_name_index'),
+      GinIndex(fields=['food_name'], name='customized_food_name_index', opclasses=['gin_trgm_ops']),
       models.Index(fields=['category_main', 'category_sub'], name='customized_food_category_index'),
     ]
 
@@ -98,7 +99,7 @@ class ProcessedFood(FoodModel):
     verbose_name_plural = verbose_name
     indexes = [
       models.Index(fields=['food_code'], name='processed_food_code_index'),
-      models.Index(fields=['food_name'], name='processed_food_name_index'),
+      GinIndex(fields=['food_name'], name='processed_food_name_index', opclasses=['gin_trgm_ops']),
       models.Index(fields=['category_main', 'category_sub'], name='processed_food_category_index'),
       models.Index(fields=['barcode_no'], name='processed_food_barcode_index'),
     ]
@@ -116,7 +117,7 @@ class FreshFood(FoodModel):
     verbose_name_plural = verbose_name
     indexes = [
       models.Index(fields=['food_code'], name='fresh_food_code_index'),
-      models.Index(fields=['food_name'], name='fresh_food_name_index'),
+      GinIndex(fields=['food_name'], name='fresh_food_name_index', opclasses=['gin_trgm_ops']),
       models.Index(fields=['category_main', 'category_sub'], name='fresh_food_category_index'),
     ]
 
@@ -133,7 +134,7 @@ class CookedFood(FoodModel):
     verbose_name_plural = verbose_name
     indexes = [
       models.Index(fields=['food_code'], name='cooked_food_code_index'),
-      models.Index(fields=['food_name'], name='cooked_food_name_index'),
+      GinIndex(fields=['food_name'], name='cooked_food_name_index', opclasses=['gin_trgm_ops']),
       models.Index(fields=['category_main', 'category_sub'], name='cooked_food_category_index'),
     ]
 

@@ -1,6 +1,7 @@
 from logging import getLogger
 from time import process_time_ns
 from django.db import reset_queries, connection
+from django.conf import settings
 from rest_framework.response import Response
 
 
@@ -35,7 +36,8 @@ class MetricMiddleware:
     logger = getLogger('django.request')
     logger.debug('====================')
     logger.debug(f'Request: {request.method} {request.path}')
-    logger.debug(f'Number of queries: {total_queries}')
+    if settings.DEBUG:
+      logger.debug(f'Number of queries: {total_queries}')
     logger.debug(f'Total time: {(total_time):.4f}s')
     logger.debug('====================')
 

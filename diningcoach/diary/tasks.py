@@ -92,7 +92,7 @@ def write_meal_nutrition(meal_diary_id):
     meal_nutrition_serializer.is_valid(raise_exception=True)
     meal_nutrition_serializer.save()
   except IntegrityError:
-    raise CreateDataFailedException(detail=('CREATE_DATA_FAILED', '식단일기 영양성분 데이터 생성에 실패하였습니다.'))
+    raise CreateDataFailedException(detail=('D4', 'CREATE_DATA_FAILED', '식단일기 영양성분 데이터 생성에 실패하였습니다.'))
 
 
 @shared_task(bind=False)
@@ -116,7 +116,7 @@ def edit_meal_nutrition(meal_diary_id):
     meal_nutrition_serializer.is_valid(raise_exception=True)
     meal_nutrition_serializer.save()
   except IntegrityError:
-    raise UpdateDataFailedException(detail=('UPDATE_DATA_FAILED', '식단일기 영양성분 데이터 수정에 실패하였습니다.'))
+    raise UpdateDataFailedException(detail=('D5', 'UPDATE_DATA_FAILED', '식단일기 영양성분 데이터 수정에 실패하였습니다.'))
 
 
 def delete_meal_image(meal_image_list):
@@ -178,7 +178,7 @@ def delete_meal_diary():
 
       meal_diary.delete()
   except IntegrityError:
-    raise DeleteDataFailedException(detail=('DELETE_DATA_FAILED', '식단일기 데이터 영구 삭제에 실패하였습니다.'))
+    raise DeleteDataFailedException(detail=('D6', 'DELETE_DATA_FAILED', '식단일기 데이터 영구 삭제에 실패하였습니다.'))
 
 
 # Celery Beat Scheduler

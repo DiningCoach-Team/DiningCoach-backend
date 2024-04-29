@@ -36,6 +36,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
   '127.0.0.1',
   '43.202.10.196',
+  'diningcoach_server',
 ]
 
 INTERNAL_IPS = [
@@ -197,8 +198,9 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # Django REST framework
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'food.utils.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'diningcoach.utils.custom_exception_handler',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_RENDERER_CLASSES': ['diningcoach.utils.CustomResponseRenderer'],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
         # 'rest_framework.permissions.IsAuthenticated',
