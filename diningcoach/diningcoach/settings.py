@@ -131,7 +131,7 @@ DATABASES = {
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT')
+        'PORT': env('DB_PORT'),
     }
 }
 
@@ -285,10 +285,14 @@ SWAGGER_SETTINGS = {
 }
 
 # celery
+REDIS_HOSTNAME = 'redis'
+if DEBUG:
+    REDIS_HOSTNAME = '127.0.0.1'
+
 CELERY_ALWAYS_EAGER = True
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+CELERY_BROKER_URL = f'redis://{REDIS_HOSTNAME}:6379'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOSTNAME}:6379'
 CELERY_ACCEPT_CONTENT = ['json', 'pickle', 'application/json', 'application/text']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
