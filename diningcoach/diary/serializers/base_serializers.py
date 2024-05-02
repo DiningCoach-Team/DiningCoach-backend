@@ -39,9 +39,14 @@ class MealImageWriteEditSerializer(serializers.ModelSerializer):
     fields = ['image_url', 'is_deleted']
 
   def create(self, validated_data):
+    try:
+      device_info = self.context['request'].META['HTTP_USER_AGENT']
+    except KeyError:
+      device_info = 'Unknown Device'
+
     meal_image = MealImage.objects.create(
       image_url=validated_data['image_url'],
-      device_info=self.context['request'].META['HTTP_USER_AGENT'],
+      device_info=device_info,
       is_deleted=self.IS_DELETED_DEFAULT,
       meal_id=self.context['parent_id'],
     )
