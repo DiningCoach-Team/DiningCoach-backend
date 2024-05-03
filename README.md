@@ -1,5 +1,5 @@
 # DiningCoach API Server
-#### Last updated : 28 Apr 2024
+#### Last updated : 3 May 2024
 ### DiningCoach, for those who need special meal assistance
 <img src="images/DiningCoach App Overview.jpg" alt="DiningCoach App Overview (1000x1400)" width="800" height="1120">
 
@@ -61,7 +61,7 @@
 
 **Listed below are some of the important factors that we have taken into consideration during development.**
 
-<img src="images/DiningCoach Server Development Checklist.jpg" alt="DiningCoach Server Development Checklist" width="800" height="400">
+<img src="images/DiningCoach Server Development Checklist.jpg" alt="DiningCoach Server Development Checklist" width="750" height="450">
 
 
 ## 4. Project Architecture
