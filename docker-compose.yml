@@ -14,7 +14,7 @@ services:
     working_dir: /diningcoach
     command: gunicorn --bind 0.0.0.0:8000 diningcoach.wsgi:application
     env_file:
-      - ./diningcoach/.env
+      - /home/ubuntu/.env
     depends_on:
       - redis
 
@@ -27,6 +27,8 @@ services:
     command: celery -A diningcoach worker -l info
     environment:
       - C_FORCE_ROOT=true
+    env_file:
+      - /home/ubuntu/.env
     depends_on:
       - django_app
       - redis
@@ -38,6 +40,8 @@ services:
       - ./diningcoach:/diningcoach
     working_dir: /diningcoach
     command: celery -A diningcoach beat -l info
+    env_file:
+      - /home/ubuntu/.env
     depends_on:
       - django_app
       - redis
