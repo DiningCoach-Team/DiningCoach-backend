@@ -111,7 +111,7 @@ class AccountSignUpSerializer(RegisterSerializer):
     elif User.objects.filter(email=value).exists():
       raise AccountAlreadyExistsException(detail=('U4', 'ACCOUNT_ALREADY_EXISTS', '해당 이메일로 등록된 계정이 이미 존재합니다.'))
     return value
-  
+
   # Password must have
   # 1) minimum 8 characters and maximum 16 characters in length. -> {8,16}
   # 2) at least one uppercase alphabet. -> (?=.*?[A-Z])
